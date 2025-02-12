@@ -116,10 +116,10 @@
 
         .form-group input {
             width: 100%;
-            padding: 0.5rem;
+            padding: 0.8rem;
             border: 2px solid #e1e1e1;
             border-radius: 5px;
-            font-size: 0.9rem;
+            font-size: 1rem;
             transition: all 0.3s ease;
         }
 

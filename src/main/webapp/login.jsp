@@ -29,12 +29,19 @@
         .login-container {
             background: white;
             padding: 2rem;
-            border-radius: 10px;
+            border-radius: 1px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 400px;
             overflow: hidden;
-            border: 4px solid #FFD700;
+            /*border: 1px solid #FFD700;*/
+            animation-name: myAnimation;
+            animation-duration: 0.8s;
+        }
+        
+        @keyframes myAnimation{
+            from {background-color: #1a1a1a;}
+            to {background-color: white;}
         }
 
         .logo {
@@ -44,7 +51,7 @@
         }
 
         .logo h1 {
-            color: #FFD700;
+            color: #FFBF00;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         }
 
@@ -84,7 +91,7 @@
 
         .login-btn {
             width: 100%;
-            padding: 1rem;
+            padding: 0.78rem;
             background-color: #2c2c2c;
             color: #FFD700;
             border: none;
@@ -104,7 +111,8 @@
 
         .forgot-password {
             text-align: center;
-            margin-top: 1rem;
+            margin-top: 0.75rem;
+            font-size: 1rem;
         }
 
         .forgot-password a {
@@ -124,7 +132,7 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 45px;
+            height: 50px;
             background: repeating-linear-gradient(
                 135deg,
                 #FFD700,
@@ -178,10 +186,10 @@
             <button type="submit" class="login-btn">Login</button>
             
             <div class="forgot-password">
-                <a href="forgot-password.jsp">Forgot Password?</a>
+                <a href="recovery.jsp">Forgot Password?</a>
             </div>
             <div class="forgot-password">
-                <a href="sign-up.jsp">Don't have an account?</a>
+                <a href="register.jsp">Don't have an account?</a>
             </div>
         </form>
     </div>
@@ -239,3 +247,4 @@
     </script>
 </body>
 </html>
+

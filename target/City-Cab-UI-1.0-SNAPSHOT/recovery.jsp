@@ -227,7 +227,7 @@
 
         <div class="company-footer">
             <p><strong>MegaCity Cab Service</strong></p>
-            <p>Your trusted ride partner since 2025</p>
+            <p>Your trusted ride partner since 1996</p>
             <p>123, Some Street, Colombo</p>
             <div class="contact">
                 <p>Questions? Contact us:</p>

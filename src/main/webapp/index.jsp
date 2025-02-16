@@ -10,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Megacity</title>
+    <title>MegaCity Cabs</title>
     <style>
         * {
             margin: 0;
@@ -292,7 +292,7 @@
 
         .feature-card:hover {
             transform: translateY(-15px);
-            box-shadow: 0 14px 20px rgba(0,0,0,0.8);
+            box-shadow: 0 14px 20px rgba(0,0,0,1.0);
         }
 
         .feature-card h3 {
@@ -311,7 +311,11 @@
             padding: 4rem 2rem;
             background: #2c2c2c;
             color: white;
+            border: 5px;
+            border-style: dashed;
+            border-color: #FFD700;
             width: 100%;
+            box-shadow: 0 14px 20px rgba(0,0,0,0.7);
             transition: transform 0.4s ease;
             
         }
@@ -431,6 +435,7 @@
         .articles-section {
             padding: 4rem 8%;
             background: #eaeded;
+            border-radius: 5px;
             transition: transform 0.4s ease;
         }
         
@@ -490,10 +495,11 @@
             background: #2c2c2c;
             padding: 3rem 8%;
             margin: 3rem 0;
+            border-radius: 5px;
             transition: transform 0.4s ease;
         }
         
-        .stats-section:hover{
+        .stats-section:hover {
             transform: translateY(-17px);
         }
 
@@ -506,12 +512,54 @@
 
         .stat-item {
             color: white;
-        }
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }    
 
         .stat-number {
             font-size: 2.5rem;
             color: #FFD700;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1px;
+        }
+        
+        .stat-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .vehicle-icon{
+            width: 200px;
+            height: 100%;
+        }
+        
+        
+        .customer-icon:hover {
+            transform: scale(1.2) rotate(5deg);
+            filter: drop-shadow(0 0 10px #FFD700);
+        }
+
+        .driver-icon:hover {
+            animation: drive 1s;
+            animation-iteration-count: infinite;
+        }
+        
+        @keyframes drive{
+            50% { transform: rotate(30deg); }
+            100% { transform: rotate(-30deg); }
+        }
+
+        .vehicle-icon:hover {
+            transform: scale(1.1) rotate(-5deg);
+            filter: drop-shadow(0 0 12px #2196F3);
+        }
+
+        .support-icon:hover {
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 15px #E91E63);
         }
 
         /* Enhanced Footer Styles */
@@ -591,6 +639,17 @@
                 grid-template-columns: repeat(2, 1fr);
             }
         }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-icon {
+                width: 60px;
+                height: 60px;
+            }
+        }
 
         @media (max-width: 480px) {
             .stats-grid {
@@ -622,20 +681,20 @@
             <a href="#" class="sublogo">CAB SERVICE</a>
 
             <div class="nav-links">
-                <a href="#" class="nav-link">Home</a>
-                <a href="#" class="nav-link">Book Now</a>
+                <a href="index.jsp" class="nav-link">Home</a>
+                <a href="booking.jsp" class="nav-link">Book Now</a>
                 
                 <div class="dropdown">
                     <a href="#" class="nav-link">Rates ▼</a>
                     <div class="dropdown-content">
-                        <a href="#">Vehicles</a>
-                        <a href="#">Packages</a>
+                        <a href="vehicles.jsp">Vehicles</a>
+                        <a href="pricing.jsp">Packages</a>
                         <a href="#">Offers</a>
                     </div>
                 </div>
 
-                <a href="#" class="nav-link">About</a>
-                <a href="#" class="nav-link">Profile</a>
+                <a href="support.jsp" class="nav-link">About</a>
+                <a href="profile.jsp" class="nav-link">Profile</a>
 
                 <div class="search-container">
                     <input type="text" placeholder="Search...">
@@ -672,7 +731,7 @@
                 <h2>Latest Updates</h2>
                 <div class="articles-grid">
                     <article class="article-card">
-                        <img src="/api/placeholder/800/500" alt="New Fleet Addition" class="article-image">
+                        <img src="IMG/article1.png" alt="New Fleet Addition" class="article-image">
                         <div class="article-content">
                             <h3>Expanding Our Premium Fleet</h3>
                             <p>We're excited to announce the addition of the wide range of vehicles to our fleet, providing you with more options for your premium travel needs.</p>
@@ -680,10 +739,10 @@
                         </div>
                     </article>
                     <article class="article-card">
-                        <img src="/api/placeholder/800/500" alt="Mobile App Launch" class="article-image">
+                        <img src="IMG/article2.png" alt="Mobile App Launch" class="article-image">
                         <div class="article-content">
-                            <h3>New Mobile App Features</h3>
-                            <p>Book rides, track your driver, and manage your preferences with our newly updated mobile application.</p>
+                            <h3>New Website Features</h3>
+                            <p>Book rides, find your driver, and manage your reservations with our newly updated web application.</p>
                             <a href="#" class="read-more">Read More →</a>
                         </div>
                     </article>
@@ -692,25 +751,29 @@
             
              <!-- Stats Section -->
                 <section class="stats-section">
-                    <div class="stats-grid">
-                        <div class="stat-item">
-                            <div class="stat-number">50K+</div>
-                            <div>Happy Customers</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number">1000+</div>
-                            <div>Professional Drivers</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number">500+</div>
-                            <div>Vehicles</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number">24/7</div>
-                            <div>Customer Support</div>
-                        </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <img src="IMG/customer.png" alt="Customers Icon" class="stat-icon customer-icon">
+                        <div class="stat-number">50K+</div>
+                        <div>Happy Customers</div>
                     </div>
-                </section>
+                    <div class="stat-item">
+                        <img src="IMG/wheel.png" alt="Drivers Icon" class="stat-icon driver-icon">
+                        <div class="stat-number">1000+</div>
+                        <div>Professional Drivers</div>
+                    </div>
+                    <div class="stat-item">
+                        <img src="IMG/vehicle.png" alt="Vehicles Icon" class="stat-icon vehicle-icon">
+                        <div class="stat-number">500+</div>
+                        <div>Vehicles</div>
+                    </div>
+                    <div class="stat-item">
+                        <img src="IMG/callcent.png" alt="Support Icon" class="stat-icon support-icon">
+                        <div class="stat-number">24/7</div>
+                        <div>Customer Support</div>
+                    </div>
+                </div>
+            </section>
 
             <section class="cta-section">
                 <h2>Ready to Book your Ride?</h2>
@@ -734,7 +797,7 @@
                             <li><a href="#">Book a Ride</a></li>
                             <li><a href="#">Our Services</a></li>
                             <li><a href="#">About Us</a></li>
-                            <li><a href="#">Contact</a></li>
+                            <li><a href="#">Profile</a></li>
                         </ul>
                     </div>
                     <div class="footer-section">

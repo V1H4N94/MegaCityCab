@@ -327,7 +327,7 @@
         
         .articles-section{
             width: 100%;
-            height: 500px;
+            height: 100%;
             background-color: white; 
         }
 
@@ -400,6 +400,65 @@
             .footer-content {
                 grid-template-columns: 1fr;
             }
+        }
+        
+        .booking-form {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2c2c2c;
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            border-color: #FFD700;
+            outline: none;
+            box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .submit-btn {
+            background-color: #FFD700;
+            color: #2c2c2c;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background-color: #2c2c2c;
+            color: #FFD700;
+        }
     </style>
 </head>
 <body>
@@ -453,6 +512,59 @@
             
 
             <section class="articles-section">
+                <form class="booking-form" action="processBooking.jsp" method="POST">
+                    <div class="form-group">
+                        <label for="transportType">Transport Type</label>
+                        <select id="transportType" name="transportType" class="form-control" required>
+                            <option value="airport">Airport Transport</option>
+                            <option value="travel">Corporate Travel</option>
+                            <option value="wedding">Wedding Cars</option>
+                            <option value="van">Business Trip</option>
+                            <option value="bus">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pickupDate">Pick-up Date</label>
+                        <input type="date" id="pickupDate" name="pickupDate" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pickupTime">Pick-up Time</label>
+                        <input type="time" id="pickupTime" name="pickupTime" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pickupLocation">Pick-up Location</label>
+                        <input type="text" id="pickupLocation" name="pickupLocation" class="form-control" placeholder="Enter pick-up location" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dropoffLocation">Drop-off Location</label>
+                        <input type="text" id="dropoffLocation" name="dropoffLocation" class="form-control" placeholder="Enter drop-off location" required>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="withDriver" name="withDriver" checked>
+                        <label for="withDriver">With Driver</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vehicleType">Vehicle Type</label>
+                        <select id="vehicleType" name="vehicleType" class="form-control" required>
+                            <option value="Sedan">Luxury Sedan</option>
+                            <option value="Compact">Compact</option>
+                            <option value="Subcompact">Subcompact</option>
+                            <option value="Luxury">Sedan</option>
+                            <option value="Sedan">Ragged SUV</option>
+                            <option value="Sedan">Minibus</option>
+                            <option value="Pickup">Pickup Truck</option>
+                            <option value="Van">Sport</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Reserve Vehicle</button>
+                </form>
                 
             </section>
             

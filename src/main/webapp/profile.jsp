@@ -416,7 +416,7 @@
                 <div class="dropdown">
                     <a href="#" class="nav-link">Rates ▼</a>
                     <div class="dropdown-content">
-                        <a href="vehicle.jsp">Vehicles</a>
+                        <a href="vehicles.jsp">Vehicles</a>
                         <a href="pricing.jsp">Packages</a>
                         <a href="#">Offers</a>
                     </div>

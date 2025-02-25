@@ -10,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Get your cab</title>
+    <title>All Vehicles</title>
     <style>
         * {
             margin: 0;
@@ -388,6 +388,76 @@
             .footer-content {
                 grid-template-columns: 1fr;
             }
+            
+        }
+        
+        .vehicle-grid {
+            background: white;
+            padding: 4rem 8%;
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .vehicle-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .vehicle-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .vehicle-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 2px solid #FFD700;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-content h3 {
+            color: #2c2c2c;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-content p {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 1200px) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+
+            .vehicle-grid {
+                padding: 2rem 5%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -441,6 +511,69 @@
             
 
             <section class="articles-section">
+                <section class="vehicle-grid">
+                    <div class="grid-container">
+                        <div class="vehicle-card">
+                            <img src="IMG/sedan.jpg" alt="Luxury Sedan">
+                            <div class="card-content">
+                                <h3>Luxury Sedan</h3>
+                                <p>Premium comfort for executive travel</p>
+                            </div>
+                        </div>
+                        <div class="vehicle-card">
+                            <img src="IMG/compact.jpg" alt="SUV">
+                            <div class="card-content">
+                                <h3>Compact SUV</h3>
+                                <p>Spacious and versatile transport</p>
+                            </div>
+                        </div>
+                        <div class="vehicle-card">
+                            <img src="IMG/subcompact.jpg" alt="SUV">
+                            <div class="card-content">
+                                <h3>Subcompact SUV</h3>
+                                <p>Perfect for group travel</p>
+                            </div>
+                        </div>
+                        <div class="vehicle-card">
+                            <img src="IMG/luxury.jpg" alt="sedan">
+                            <div class="card-content">
+                                <h3>Sedan</h3>
+                                <p>Style and performance combined</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-container">
+                        <div class="vehicle-card">
+                            <img src="IMG/ragged.jpg" alt="ragged">
+                            <div class="card-content">
+                                <h3>Ragged SUV</h3>
+                                <p>Efficient city transportation</p>
+                            </div>
+                        </div>
+                        <div class="vehicle-card">
+                            <img src="IMG/van.jpg" alt="Minibus">
+                            <div class="card-content">
+                                <h3>Minibus</h3>
+                                <p>Ideal for larger groups</p>
+                            </div>
+                        </div>
+                        <div class="vehicle-card">
+                            <img src="IMG/pickup.jpg" alt="pickuptruck">
+                            <div class="card-content">
+                                <h3>Pickup Truck</h3>
+                                <p>Eco-friendly transportation</p>
+                            </div>
+                        </div>
+                        <div class="vehicle-card">
+                            <img src="IMG/sport.jpg" alt="Sport">
+                            <div class="card-content">
+                                <h3>Sport</h3>
+                                <p>Premium family transport</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
                 
             </section>
             

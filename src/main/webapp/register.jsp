@@ -215,9 +215,9 @@
             </div>
 
             <div class="form-group">
-                <label for="hometown">Hometown</label>
-                <input type="text" id="hometown" name="hometown" placeholder="Enter your hometown">
-                <div class="error-message" id="hometownError"></div>
+                <label for="identity">NIC / Driving License / Passport</label>
+                <input type="text" id="hometown" name="identity" placeholder="Confirm your identity">
+                <div class="error-message" id="identityError"></div>
             </div>
             
             <button type="submit" class="register-btn">Register</button>

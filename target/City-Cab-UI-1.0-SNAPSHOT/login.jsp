@@ -170,7 +170,7 @@
             <p>Your trusted ride partner</p>
         </div>
         
-        <form id="loginForm" action="loginServlet" method="POST" onsubmit="return validateForm()">
+        <form id="loginForm" method="POST">
             <div class="form-group">
                 <label for="email">Username</label>
                 <input type="email" id="email" name="email" placeholder="Enter your email">
@@ -195,56 +195,118 @@
     </div>
 
     <script>
-        function validateForm() {
-            let isValid = true;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            // Reset error messages
-            document.getElementById('emailError').style.display = 'none';
-            document.getElementById('passwordError').style.display = 'none';
-            
-            // Email validation
+    function validateForm() {
+        let isValid = true;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        // Reset error messages
+        document.getElementById('emailError').style.display = 'none';
+        document.getElementById('passwordError').style.display = 'none';
+
+        // Email validation
+        if (!email) {
+            showError('emailError', 'Email is required');
+            isValid = false;
+        } else {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!email) {
-                showError('emailError', 'Email is required');
-                isValid = false;
-            } else if (!emailRegex.test(email)) {
+            if (!emailRegex.test(email)) {
                 showError('emailError', 'Please enter a valid email address');
                 isValid = false;
             }
-            
-            // Password validation
-            if (!password) {
-                showError('passwordError', 'Password is required');
-                isValid = false;
-            } else if (password.length < 6) {
-                showError('passwordError', 'Password must be at least 6 characters long');
-                isValid = false;
-            }
-            
-            return isValid;
         }
-        
+
+        // Password validation
+        if (!password) {
+            showError('passwordError', 'Password is required');
+            isValid = false;
+        } else if (password.length < 6) {
+            showError('passwordError', 'Password must be at least 6 characters long');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
         function showError(elementId, message) {
             const errorElement = document.getElementById(elementId);
             errorElement.textContent = message;
             errorElement.style.display = 'block';
         }
-        
+
         // Add input event listeners for real-time validation
-        document.getElementById('email').addEventListener('input', function() {
+        document.getElementById('email').addEventListener('input', function () {
             if (this.value) {
                 document.getElementById('emailError').style.display = 'none';
             }
         });
-        
-        document.getElementById('password').addEventListener('input', function() {
+
+        document.getElementById('password').addEventListener('input', function () {
             if (this.value) {
                 document.getElementById('passwordError').style.display = 'none';
             }
         });
-    </script>
+
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const emailError = document.getElementById('emailError');
+            const passwordError = document.getElementById('passwordError');
+
+            // Reset errors
+            emailError.style.display = 'none';
+            passwordError.style.display = 'none';
+
+            if (!email || !password) {
+                if (!email) emailError.textContent = "Email is required";
+                if (!password) passwordError.textContent = "Password is required";
+                emailError.style.display = email ? 'none' : 'block';
+                passwordError.style.display = password ? 'none' : 'block';
+                return false;
+            }
+
+            try {
+                // Fetch Admins
+                const adminResponse = await fetch('http://localhost:8080/rest_service/api/admins');
+                const admins = await adminResponse.json();
+
+                for (let admin of admins) {
+                    if (admin.user === email && admin.pass === password) {
+                        window.location.href = 'administrator.jsp';
+                        return;
+                    }
+                }
+
+                // Fetch Users
+                const userResponse = await fetch('http://localhost:8080/rest_service/api/users');
+                const users = await userResponse.json();
+
+                for (let user of users) {
+                    if (user.email === email && user.pass === password) {
+                        window.location.href = 'index.jsp';
+                        return;
+                    }
+                }
+
+                // If no match
+                showError('emailError', "Invalid email or password");
+
+            } catch (error) {
+                console.error("Error during login:", error);
+                showError('emailError', "An error occurred. Please try again later.");
+            }
+
+            return false;
+        }
+
+        // Attach to form submission
+        document.getElementById('loginForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            if (validateForm()) {
+                login();
+            }
+        });
+</script>
 </body>
 </html>
 

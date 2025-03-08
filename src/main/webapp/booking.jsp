@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.sql.*" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -319,16 +320,19 @@
             }
         }
         
-        .content {
+        /*.content {
             padding: 0rem 8%;
             max-width: 1800px;
             margin: 0 auto;
-        }
+        }*/
         
-        .articles-section{
-            width: 100%;
-            height: 100%;
-            background-color: white; 
+        .articles-section {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 0.1rem 8% 4rem 8%;
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
         }
 
         /* Enhanced Footer Styles */
@@ -402,12 +406,44 @@
             }
         }
         
+        .service-plans {
+            padding: 4rem 8% 1px 8%; /* Reduced bottom padding from 4rem to 2rem */
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .service-heading {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .service-heading h2 {
+            font-size: 2.5rem;
+            color: #2c2c2c;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .service-heading h2:after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background-color: #FFD700;
+            margin: 0.5rem auto;
+        }
+
+        .service-heading p {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 2px;
+        }
+        
         .booking-form {
             background: rgba(255, 255, 255, 0.95);
             padding: 2rem;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
+            max-width: 480px;
             margin: auto;
         }
 
@@ -434,12 +470,6 @@
             border-color: #FFD700;
             outline: none;
             box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
         }
 
         .submit-btn {
@@ -506,21 +536,21 @@
 
         <!-- Main Content -->
         <main class="content">
-            <section class="hero-section">
-              
-            </section>
+            <!-- Service Plans Section -->
+                <section class="service-plans">
+                    <div class="service-heading">
+                        <h2>Get Your Ride</h2>
+                        <p>Reserve the desiring vehicle to your moment in need</p>
+                    </div>
+                </section>    
             
 
             <section class="articles-section">
                 <form class="booking-form" action="processBooking.jsp" method="POST">
                     <div class="form-group">
-                        <label for="transportType">Transport Type</label>
-                        <select id="transportType" name="transportType" class="form-control" required>
-                            <option value="airport">Airport Transport</option>
-                            <option value="travel">Corporate Travel</option>
-                            <option value="wedding">Wedding Cars</option>
-                            <option value="van">Business Trip</option>
-                            <option value="bus">Other</option>
+                        <label for="pkgPlans">Available Plans</label>
+                        <select id="pkgPlans" name="pkgPlans" class="form-control" required>
+                            <option value="">Select a Plan</option>
                         </select>
                     </div>
 
@@ -530,37 +560,22 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="pickupTime">Pick-up Time</label>
-                        <input type="time" id="pickupTime" name="pickupTime" class="form-control" required>
-                    </div>
-
-                    <div class="form-group">
                         <label for="pickupLocation">Pick-up Location</label>
                         <input type="text" id="pickupLocation" name="pickupLocation" class="form-control" placeholder="Enter pick-up location" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="dropoffLocation">Drop-off Location</label>
-                        <input type="text" id="dropoffLocation" name="dropoffLocation" class="form-control" placeholder="Enter drop-off location" required>
-                    </div>
-
-                    <div class="form-group checkbox-group">
-                        <input type="checkbox" id="withDriver" name="withDriver" checked>
-                        <label for="withDriver">With Driver</label>
-                    </div>
-
-                    <div class="form-group">
                         <label for="vehicleType">Vehicle Type</label>
                         <select id="vehicleType" name="vehicleType" class="form-control" required>
-                            <option value="Sedan">Luxury Sedan</option>
-                            <option value="Compact">Compact</option>
-                            <option value="Subcompact">Subcompact</option>
-                            <option value="Luxury">Sedan</option>
-                            <option value="Sedan">Ragged SUV</option>
-                            <option value="Sedan">Minibus</option>
-                            <option value="Pickup">Pickup Truck</option>
-                            <option value="Van">Sport</option>
+                            <option value="">Select a package first</option>
                         </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div style="display: flex; align-items: flex-start;">
+                            <input type="checkbox" id="agreeTerms" name="agreeTerms" required style="margin-top: 5px; margin-right: 10px;">
+                            <label for="agreeTerms">I agree to the <a href="#" style="color: #2c2c2c; text-decoration: underline;">Terms and Conditions</a> and <a href="#" style="color: #2c2c2c; text-decoration: underline;">Privacy Policy</a>.</label>
+                        </div>
                     </div>
 
                     <button type="submit" class="submit-btn">Reserve Vehicle</button>
@@ -643,6 +658,77 @@
 
         menuBtn.addEventListener('click', () => {
             navLinks.classList.toggle('active');
+        });
+        
+        // avoiding selection of earlier dates 
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+
+            const formattedToday = today.toISOString().split('T')[0];
+
+            const pickupDateInput = document.getElementById('pickupDate');
+
+            pickupDateInput.setAttribute('min', formattedToday);
+
+            pickupDateInput.value = formattedToday;
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fetch packages
+            fetch('http://localhost:8080/rest_service/api/packages')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch packages");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const dropdown = document.getElementById('pkgPlans');
+                    dropdown.innerHTML = '<option value="">Select a Plan</option>'; // Reset options
+
+                    data.forEach(pkg => {
+                        const option = document.createElement('option');
+                        option.value = pkg.package_id;
+                        option.textContent = pkg.package_name;
+                        dropdown.appendChild(option);
+                    });
+                })
+                .catch(error => console.error("Error fetching packages:", error));
+
+            // Add event listener for package selection change
+            document.getElementById('pkgPlans').addEventListener('change', function() {
+                const packageId = this.value;
+                const vehicleDropdown = document.getElementById('vehicleType');
+
+                if (packageId === '') {
+                    // Reset vehicle dropdown if no package is selected
+                    vehicleDropdown.innerHTML = '<option value="">Select a package first</option>';
+                    return;
+                }
+
+                // Fetch vehicles for the selected package
+                fetch(`http://localhost:8080/rest_service/api/vehicles/${packageId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Failed to fetch vehicle types");
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        vehicleDropdown.innerHTML = '<option value="">Select a Vehicle</option>'; // Reset options
+
+                        data.forEach(vehicle => {
+                            const option = document.createElement('option');
+                            option.value = vehicle.vehicleTypeId;
+                            option.textContent = vehicle.vehicleName;
+                            vehicleDropdown.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error("Error fetching vehicle types:", error);
+                        vehicleDropdown.innerHTML = '<option value="">Error loading vehicles</option>';
+                    });
+            });
         });
     </script>
 </body>

@@ -185,7 +185,7 @@
             <p>Create your account</p>
         </div>
         
-        <form id="registrationForm" action="registerServlet" method="POST" onsubmit="return validateForm()">
+        <form id="registrationForm" onsubmit="return validateForm()">
             <div class="form-row">
                 <div class="form-group">
                     <label for="fullName">Full Name</label>
@@ -216,7 +216,7 @@
 
             <div class="form-group">
                 <label for="identity">NIC / Driving License / Passport</label>
-                <input type="text" id="hometown" name="identity" placeholder="Confirm your identity">
+                <input type="text" id="identity" name="identity" placeholder="Confirm your identity">
                 <div class="error-message" id="identityError"></div>
             </div>
             
@@ -234,20 +234,20 @@
             const fullName = document.getElementById('fullName').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const hometown = document.getElementById('hometown').value;
             const phone = document.getElementById('phone').value;
-            
+            const identity = document.getElementById('identity').value;
+
             // Reset error messages
             document.querySelectorAll('.error-message').forEach(error => {
                 error.style.display = 'none';
             });
-            
+
             // Full Name validation
             if (!fullName) {
                 showError('nameError', 'Full name is required');
                 isValid = false;
             }
-            
+
             // Email validation
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!email) {
@@ -257,7 +257,7 @@
                 showError('emailError', 'Please enter a valid email address');
                 isValid = false;
             }
-            
+
             // Password validation
             if (!password) {
                 showError('passwordError', 'Password is required');
@@ -266,13 +266,13 @@
                 showError('passwordError', 'Password must be at least 6 characters long');
                 isValid = false;
             }
-            
-            // Hometown validation
-            if (!hometown) {
-                showError('hometownError', 'Hometown is required');
+
+            // Identity validation
+            if (!identity) {
+                showError('identityError', 'Identity document is required');
                 isValid = false;
             }
-            
+
             // Phone validation
             const phoneRegex = /^\d{10}$/;
             if (!phone) {
@@ -282,23 +282,125 @@
                 showError('phoneError', 'Please enter a valid 10-digit phone number');
                 isValid = false;
             }
-            
-            return isValid;
+
+            if (isValid) {
+                // If form is valid, submit via fetch API
+                registerUser(fullName, email, password, phone, identity);
+                return false; // Prevent the form's default submit action
+            }
+
+            return false; // Prevent form submission on validation failure
         }
-        
+
         function showError(elementId, message) {
             const errorElement = document.getElementById(elementId);
             errorElement.textContent = message;
             errorElement.style.display = 'block';
         }
-        
-        // Add input event listeners for real-time validation
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('input', function() {
-                const errorElement = this.parentElement.querySelector('.error-message');
-                if (this.value) {
-                    errorElement.style.display = 'none';
+
+        function registerUser(fullName, email, password, phone, identity) {
+            // Create a user object that matches your User class structure
+            const user = {
+                id: 0, // The ID will likely be assigned by the database
+                name: fullName,
+                pass: password,
+                email: email,
+                tel: phone,
+                nic: identity
+            };
+
+            // Show loading state
+            const registerBtn = document.querySelector('.register-btn');
+            const originalBtnText = registerBtn.textContent;
+            registerBtn.textContent = 'Processing...';
+            registerBtn.disabled = true;
+
+            // Use the Fetch API to send the data to your service
+            fetch('http://localhost:8080/rest_service/api/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            })
+            .then(response => {
+                // Reset button state
+                registerBtn.textContent = originalBtnText;
+                registerBtn.disabled = false;
+
+                if (response.status === 201) {
+                    // Registration successful
+                    showSuccessMessage('Account created successfully! Redirecting to login...');
+                    // Redirect to login page after a delay
+                    setTimeout(() => {
+                        window.location.href = 'login.jsp';
+                    }, 2000);
+                } else {
+                    // Registration failed
+                    showErrorMessage('Registration failed. Please try again later.');
                 }
+            })
+            .catch(error => {
+                // Reset button state
+                registerBtn.textContent = originalBtnText;
+                registerBtn.disabled = false;
+
+                console.error('Error:', error);
+                showErrorMessage('Connection error. Please check your internet connection and try again.');
+            });
+        }
+
+        function showSuccessMessage(message) {
+            // Create a success message element if it doesn't exist
+            let successEl = document.getElementById('successMessage');
+            if (!successEl) {
+                successEl = document.createElement('div');
+                successEl.id = 'successMessage';
+                successEl.style.backgroundColor = '#4CAF50';
+                successEl.style.color = 'white';
+                successEl.style.padding = '10px';
+                successEl.style.borderRadius = '5px';
+                successEl.style.marginTop = '15px';
+                successEl.style.textAlign = 'center';
+
+                const form = document.getElementById('registrationForm');
+                form.after(successEl);
+            }
+
+            successEl.textContent = message;
+            successEl.style.display = 'block';
+        }
+
+        function showErrorMessage(message) {
+            // Create a global error message element if it doesn't exist
+            let errorEl = document.getElementById('globalErrorMessage');
+            if (!errorEl) {
+                errorEl = document.createElement('div');
+                errorEl.id = 'globalErrorMessage';
+                errorEl.style.backgroundColor = '#f44336';
+                errorEl.style.color = 'white';
+                errorEl.style.padding = '10px';
+                errorEl.style.borderRadius = '5px';
+                errorEl.style.marginTop = '15px';
+                errorEl.style.textAlign = 'center';
+
+                const form = document.getElementById('registrationForm');
+                form.after(errorEl);
+            }
+
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+        }
+
+        // Add input event listeners for real-time validation
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', function() {
+                    const errorElement = this.parentElement.querySelector('.error-message');
+                    if (errorElement && this.value) {
+                        errorElement.style.display = 'none';
+                    }
+                });
             });
         });
     </script>

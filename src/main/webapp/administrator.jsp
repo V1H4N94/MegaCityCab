@@ -203,14 +203,15 @@
             <div class="sidebar-sublogo">CONTROL CENTER</div>
         </div>
         <div class="sidebar-menu">
-            <a href="#" class="active" data-section="home">Home</a>
-            <a href="#" data-section="users">Users</a>
-            <a href="#" data-section="bookings">Bookings</a>
-            <a href="#" data-section="payments">Payments</a>
-            <a href="#" data-section="vehicles">Vehicles</a>
-            <a href="#" data-section="admins">Admins</a>
+            <a href="#" class="active">Home</a>
+            <a href="adminMgt.jsp">Admins</a>
+            <a href="userMgt.jsp">Users</a>
+            <a href="#">Bookings</a>
+            <a href="#">Payments</a>
+            <a href="#">Vehicles</a>
+            
         </div>
-        <button class="logout-btn">Logout</button>
+        <button onclick="location.href='login.jsp';" class="logout-btn">Logout</button>
     </div>
 
     <!-- Main Content -->
@@ -410,24 +411,21 @@
         
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM Content Loaded'); 
-            
+
             const sidebarLinks = document.querySelectorAll('.sidebar-menu a');
-            
+
             sidebarLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    console.log('Sidebar link clicked:', this.dataset.section); 
-                    
-                    
+                    // Only prevent default for links without real destinations
+                    if (this.getAttribute('href') === '#') {
+                        e.preventDefault();
+                    }
+
+                    // Update active class
                     sidebarLinks.forEach(l => l.classList.remove('active'));
-                    
                     this.classList.add('active');
 
-                    
-                    if (this.dataset.section === 'home') {
-                        loadAdminData();
-                        loadUserData();
-                    }
+                    // The href links will work naturally for actual pages
                 });
             });
 

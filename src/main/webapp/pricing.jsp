@@ -10,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Get your cab</title>
+    <title>Pick your plan</title>
     <style>
         * {
             margin: 0;
@@ -388,6 +388,161 @@
             .footer-content {
                 grid-template-columns: 1fr;
             }
+        }
+        
+        
+        /* Service Plans Section Styles */
+        .service-plans {
+            padding: 4rem 8%;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .service-heading {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .service-heading h2 {
+            font-size: 2.5rem;
+            color: #2c2c2c;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .service-heading h2:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: #FFD700;
+            margin: 0.5rem auto;
+        }
+
+        .service-heading p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .plans-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .plan-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-20px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .plan-header {
+            padding: 1.5rem;
+            background: #2c2c2c;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        .plan-header h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-icon {
+            font-size: 2rem;
+            margin-top: 0.5rem;
+        }
+
+        .plan-details {
+            padding: 1.5rem;
+        }
+
+        .plan-description {
+            color: #666;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .plan-price {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c2c2c;
+            display: block;
+        }
+
+        .price-detail {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .additional-rate {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #FFD700;
+            margin-bottom: 1.5rem;
+            background: #f9f9f9;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .plan-features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .plan-features li:before {
+            content: '✓';
+            color: #FFD700;
+            position: absolute;
+            left: 0;
+        }
+
+        .book-button {
+            display: block;
+            background: #2c2c2c;
+            color: white;
+            text-align: center;
+            padding: 0.8rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .book-button:hover {
+            background: #FFD700;
+            color: #2c2c2c;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .plans-container {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+        }
     </style>
 </head>
 <body>
@@ -435,23 +590,102 @@
 
         <!-- Main Content -->
         <main class="content">
-            <section class="hero-section">
-              
-            </section>
-            
+            <!-- Service Plans Section -->
+                <section class="service-plans">
+                    <div class="service-heading">
+                        <h2>Service Plans</h2>
+                        <p>Choose the perfect plan for your journey</p>
+                    </div>
 
-            <section class="articles-section">
-                
-            </section>
-            
-             <!-- Stats Section -->
-                <section class="stats-section">
-                
-            </section>
+                    <div class="plans-container">
+                        <!-- Budget Plan -->
+                        <div class="plan-card">
+                            <div class="plan-header">
+                                <h3>Budget</h3>
+                                <div class="plan-icon">🚗</div>
+                            </div>
+                            <div class="plan-details">
+                                <p class="plan-description">Affordable rides for daily commutes</p>
+                                <div class="plan-price">
+                                    <span class="price">Rs. 5000</span>
+                                    <span class="price-detail">Base fare (20km)</span>
+                                </div>
+                                <p class="additional-rate">Rs. 100 per additional km</p>
+                                <ul class="plan-features">
+                                    <li>Limited vehicle types</li>
+                                    <li>Basic amenities</li>
 
-            <section class="cta-section">
-                
-            </section>
+                                </ul>
+                                <a href="booking.jsp" class="book-button">Book Now</a>
+                            </div>
+                        </div>
+
+                        <!-- Economy Plan -->
+                        <div class="plan-card">
+                            <div class="plan-header">
+                                <h3>Economy</h3>
+                                <div class="plan-icon">🚕</div>
+                            </div>
+                            <div class="plan-details">
+                                <p class="plan-description">Comfortable rides at reasonable prices</p>
+                                <div class="plan-price">
+                                    <span class="price">Rs. 7500</span>
+                                    <span class="price-detail">Base fare (20km)</span>
+                                </div>
+                                <p class="additional-rate">Rs. 250 per additional km</p>
+                                <ul class="plan-features">
+                                    <li>Wide range of vehicles</li>
+                                    <li>Full-day reserve</li>
+                                </ul>
+                                <a href="booking.jsp" class="book-button">Book Now</a>
+                            </div>
+                        </div>
+
+                        <!-- Premium Plan -->
+                        <div class="plan-card">
+                            <div class="plan-header">
+                                <h3>Premium</h3>
+                                <div class="plan-icon">🚙</div>
+                            </div>
+                            <div class="plan-details">
+                                <p class="plan-description">Luxurious rides for special occasions</p>
+                                <div class="plan-price">
+                                    <span class="price">Rs. 12000</span>
+                                    <span class="price-detail">Base fare (20km)</span>
+                                </div>
+                                <p class="additional-rate">Rs. 500 per additional km</p>
+                                <ul class="plan-features">
+                                    <li>Luxury sedans</li>
+                                    <li>Reserve up to two day</li>
+                                </ul>
+                                <a href="booking.jsp" class="book-button">Book Now</a>
+                            </div>
+                        </div>
+
+                        <!-- Premium Pro Plan -->
+                        <div class="plan-card">
+                            <div class="plan-header">
+                                <h3>Premium Pro</h3>
+                                <div class="plan-icon">🏎️</div>
+                            </div>
+                            <div class="plan-details">
+                                <p class="plan-description">Ultimate luxury experience for VIPs</p>
+                                <div class="plan-price">
+                                    <span class="price">Rs. 20000</span>
+                                    <span class="price-detail">Base fare (20km)</span>
+                                </div>
+                                <p class="additional-rate">Rs. 750 per additional km</p>
+                                <ul class="plan-features">
+                                    <li>All vehicles available</li>
+                                    <li>Up to three day</li>
+                                    <li>Wi-Fi enabled</li>
+                                </ul>
+                                <a href="booking.jsp" class="book-button">Book Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
         </main>
 
         <!-- Footer -->

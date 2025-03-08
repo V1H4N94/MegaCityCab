@@ -390,10 +390,41 @@
             }
             
         }
+        /*body title*/
+        .service-plans {
+            padding: 4rem 8% 0.1rem 8%; /* Reduced bottom padding from 4rem to 2rem */
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .service-heading {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .service-heading h2 {
+            font-size: 2.5rem;
+            color: #2c2c2c;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .service-heading h2:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: #FFD700;
+            margin: 0.5rem auto;
+        }
+
+        .service-heading p {
+            color: #666;
+            font-size: 1.1rem;
+        }
         
         .vehicle-grid {
-            background: white;
-            padding: 4rem 8%;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 0.1rem 8% 4rem 8%;
             min-height: 70vh;
             display: flex;
             flex-direction: column;
@@ -416,7 +447,7 @@
         }
 
         .vehicle-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-15px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
@@ -505,8 +536,11 @@
 
         <!-- Main Content -->
         <main class="content">
-            <section class="hero-section">
-              
+            <section class="service-plans">
+                    <div class="service-heading">
+                        <h2>Service Plans</h2>
+                        <p>Choose the perfect plan for your journey</p>
+                    </div>  
             </section>
             
 

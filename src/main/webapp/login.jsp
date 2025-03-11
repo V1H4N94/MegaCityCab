@@ -272,6 +272,17 @@
 
                 for (let admin of admins) {
                     if (admin.user === email && admin.pass === password) {
+                        // Store admin data in session storage
+                        sessionStorage.setItem('loggedInUser', JSON.stringify({
+                            email: admin.user,
+                            userType: 'admin',
+                            userId: admin.id,
+                            username: admin.name || admin.user
+                        }));
+                        
+                        // Create a cookie with basic login info (non-sensitive)
+                        document.cookie = `loggedIn=true; path=/; max-age=${60*60*24}`; // 24 hours
+                        
                         window.location.href = 'administrator.jsp';
                         return;
                     }
@@ -283,6 +294,18 @@
 
                 for (let user of users) {
                     if (user.email === email && user.pass === password) {
+                        // Store user data in session storage
+                        sessionStorage.setItem('loggedInUser', JSON.stringify({
+                            email: user.email,
+                            userType: 'customer',
+                            userId: user.id,
+                            username: user.name,
+                            phone: user.phone || ''
+                        }));
+                        
+                        // Create a cookie with basic login info (non-sensitive)
+                        document.cookie = `loggedIn=true; path=/; max-age=${60*60*24}`; // 24 hours
+                        
                         window.location.href = 'index.jsp';
                         return;
                     }
@@ -306,7 +329,7 @@
                 login();
             }
         });
-</script>
+    </script>
 </body>
 </html>
 

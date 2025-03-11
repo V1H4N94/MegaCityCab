@@ -842,6 +842,49 @@
     </div>
 
     <script>
+        // Check if user is logged in when page loads
+        window.onload = function() {
+            // Check if user is logged in
+            const userData = sessionStorage.getItem('loggedInUser');
+            
+            if (!userData) {
+                // Redirect to login if not logged in
+                window.location.href = 'login.jsp';
+                return;
+            }
+            
+            // Parse the user data
+            const user = JSON.parse(userData);
+            
+            // Update welcome message or any user-specific elements
+            document.getElementById('userWelcome').textContent = `Welcome, ${user.username}!`;
+            
+            // You can use the user data elsewhere in your page
+            console.log("Logged in user:", user);
+            
+            // Optional: load user-specific data for this page
+            loadUserData(user.userId);
+        };
+        
+        // Function to load user-specific data
+        function loadUserData(userId) {
+            // You can make AJAX calls to get user-specific data
+            // For example, loading previous bookings, etc.
+            console.log("Loading data for user ID:", userId);
+        }
+        
+        // Function to handle logout
+        function logout() {
+            // Clear the session storage
+            sessionStorage.removeItem('loggedInUser');
+            
+            // Clear the cookie
+            document.cookie = "loggedIn=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            
+            // Redirect to login page
+            window.location.href = 'login.jsp';
+        }
+        
         const menuBtn = document.querySelector('.menu-btn');
         const navLinks = document.querySelector('.nav-links');
 

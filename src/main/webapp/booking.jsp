@@ -706,23 +706,48 @@
                     return;
                 }
 
-                // Fetch vehicles for the selected package
-                fetch(`http://localhost:8080/rest_service/api/vehicles/${packageId}`)
+                // First get the package-vehicle relationships
+                fetch('http://localhost:8080/rest_service/api/vehicles')
                     .then(response => {
                         if (!response.ok) {
-                            throw new Error("Failed to fetch vehicle types");
+                            throw new Error("Failed to fetch package vehicles");
                         }
                         return response.json();
                     })
-                    .then(data => {
-                        vehicleDropdown.innerHTML = '<option value="">Select a Vehicle</option>'; // Reset options
+                    .then(packageVehicles => {
+                        // Filter to get only vehicle types for this package
+                        const vehicleIdsForPackage = packageVehicles
+                            .filter(pv => pv.package_id == packageId)
+                            .map(pv => pv.vehicle_type_id);
 
-                        data.forEach(vehicle => {
-                            const option = document.createElement('option');
-                            option.value = vehicle.vehicleTypeId;
-                            option.textContent = vehicle.vehicleName;
-                            vehicleDropdown.appendChild(option);
-                        });
+                        if (vehicleIdsForPackage.length === 0) {
+                            vehicleDropdown.innerHTML = '<option value="">No vehicles available for this package</option>';
+                            return;
+                        }
+
+                        // Now get all vehicle types
+                        return fetch('http://localhost:8080/rest_service/api/carcategories')
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error("Failed to fetch vehicle types");
+                                }
+                                return response.json();
+                            })
+                            .then(allVehicleTypes => {
+                                // Filter to only include vehicles for this package
+                                const validVehicles = allVehicleTypes.filter(vehicle => 
+                                    vehicleIdsForPackage.includes(vehicle.vehicle_type_id)
+                                );
+
+                                vehicleDropdown.innerHTML = '<option value="">Select a Vehicle</option>'; // Reset options
+
+                                validVehicles.forEach(vehicle => {
+                                    const option = document.createElement('option');
+                                    option.value = vehicle.vehicle_type_id;
+                                    option.textContent = vehicle.vehicle_cat;
+                                    vehicleDropdown.appendChild(option);
+                                });
+                            });
                     })
                     .catch(error => {
                         console.error("Error fetching vehicle types:", error);

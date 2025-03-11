@@ -10,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Get your cab</title>
+    <title>User Profile - MegaCity</title>
     <style>
         * {
             margin: 0;
@@ -20,7 +20,6 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            
             background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
             min-height: 100vh;
         }
@@ -30,7 +29,6 @@
             background-image: url("IMG/bgimg.jpg");
             background-attachment: fixed;
             background-size: cover;
-            /*background: white;*/
             min-height: 100vh;
         }
 
@@ -246,6 +244,189 @@
             );
         }
 
+        /* Profile Card Styles */
+        .content {
+            padding: 2rem 5%;
+        }
+
+        .profile-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin: 2rem auto;
+            max-width: 1200px;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            width: 100%;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: #FFD700;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #2c2c2c;
+            margin-right: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #FFD700;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-info h2 {
+            color: #2c2c2c;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-info p {
+            color: #666;
+            margin-bottom: 0.25rem;
+        }
+
+        .profile-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .profile-section {
+            background: #f9f9f9;
+            border-radius: 5px;
+            padding: 1.5rem;
+        }
+
+        .profile-section h3 {
+            color: #2c2c2c;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #FFD700;
+            padding-bottom: 0.5rem;
+        }
+
+        .profile-field {
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-field label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        .profile-field input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e1e1e1;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .profile-field input:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: flex-end;
+        }
+
+        .action-button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .primary-button {
+            background-color: #2c2c2c;
+            color: #FFD700;
+        }
+
+        .primary-button:hover {
+            background-color: #FFD700;
+            color: #2c2c2c;
+        }
+
+        .secondary-button {
+            background-color: #e1e1e1;
+            color: #2c2c2c;
+        }
+
+        .secondary-button:hover {
+            background-color: #d1d1d1;
+        }
+
+        .logout-button {
+            background-color: #ff3333;
+            color: white;
+        }
+
+        .logout-button:hover {
+            background-color: #e62e2e;
+        }
+
+        .ride-history {
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .ride-history table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .ride-history th {
+            text-align: left;
+            padding: 1rem;
+            background-color: #2c2c2c;
+            color: #FFD700;
+        }
+
+        .ride-history td {
+            padding: 1rem;
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        .ride-history tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
         /* Footer */
         footer {
             width: 100%;
@@ -253,70 +434,6 @@
             color: white;
             text-align: center;
             padding: 1.5rem;
-        }
-
-
-        @media (max-width: 768px) {
-            .menu-btn {
-                display: block;
-                margin-left: auto;
-            }
-
-            .nav-links {
-                display: none;
-                width: 100%;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                background-color: #2c2c2c;
-                flex-direction: column;
-                padding: 1rem;
-                gap: 1rem;
-                transform: translateY(-10px);
-                opacity: 0;
-                transition: all 0.3s ease;
-                z-index: 1000;
-            }
-
-            .nav-links.active {
-                display: flex;
-                transform: translateY(0);
-                opacity: 1;
-            }
-
-            .search-container {
-                margin: 1rem 0;
-                width: 100%;
-            }
-
-            .search-container input {
-                width: 100%;
-            }
-
-            .search-container input:focus {
-                width: 100%;
-            }
-
-            .dropdown-content {
-                position: static;
-                box-shadow: none;
-                margin-top: 0.5rem;
-                transform: none;
-                left: 0;
-            }
-
-            .dropdown-content::before {
-                display: none;
-            }
-
-            .features {
-                grid-template-columns: 1fr;
-                padding: 0 5%;
-            }
-
-            .hero-section h2 {
-                font-size: 2rem;
-            }
         }
 
         /* Enhanced Footer Styles */
@@ -382,12 +499,64 @@
             margin-top: 2rem;
             text-align: center;
         }
-        
-        
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .menu-btn {
+                display: block;
+                margin-left: auto;
+            }
+
+            .nav-links {
+                display: none;
+                width: 100%;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background-color: #2c2c2c;
+                flex-direction: column;
+                padding: 1rem;
+                gap: 1rem;
+                transform: translateY(-10px);
+                opacity: 0;
+                transition: all 0.3s ease;
+                z-index: 1000;
+            }
+
+            .nav-links.active {
+                display: flex;
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            .profile-sections {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
         @media (max-width: 480px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-avatar {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
             .footer-content {
                 grid-template-columns: 1fr;
             }
+        }
     </style>
 </head>
 <body>
@@ -404,7 +573,7 @@
         <div class="checker-pattern2"></div>
         <div class="lenear-pattern"></div>
 
-        <!-- New Navbar -->
+        <!-- Navbar -->
         <nav class="navbar">
             <a href="#" class="logo">MEGACITY</a>
             <a href="#" class="sublogo">CAB SERVICE</a>
@@ -435,91 +604,276 @@
 
         <!-- Main Content -->
         <main class="content">
-            <section class="hero-section">
-              
-            </section>
-            
-
-            <section class="articles-section">
-                
-            </section>
-            
-             <!-- Stats Section -->
-                <section class="stats-section">
-                
-            </section>
-
-            <section class="cta-section">
-                
-            </section>
+            <div class="profile-container">
+                <div class="profile-card">
+                    <div id="profileContent">
+                        <!-- Content will be loaded here by JavaScript -->
+                        <div class="loading">Loading user profile...</div>
+                    </div>
+                </div>
+            </div>
         </main>
 
         <!-- Footer -->
-        <!-- Enhanced Footer -->
-            <div class="lenear-pattern"></div>
-            <div class="checker-pattern"></div>
-            <div class="checker-pattern2"></div>
-            <div class="lenear-pattern"></div>
-            <footer>
-                <div class="footer-content">
-                    <div class="footer-section">
-                        <h4>Quick Links</h4>
-                        <ul>
-                            <li><a href="#">Home</a></li>
-                            <li><a href="#">Book a Ride</a></li>
-                            <li><a href="#">Our Services</a></li>
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Profile</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-section">
-                        <h4>Services</h4>
-                        <ul>
-                            <li><a href="#">Airport Transfer</a></li>
-                            <li><a href="#">Corporate Travel</a></li>
-                            <li><a href="#">Wedding Cars</a></li>
-                            <li><a href="#">Budget Packages</a></li>
-                            <li><a href="#">Special Offers</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-section">
-                        <h4>Legal</h4>
-                        <ul>
-                            <li><a href="#">Terms & Conditions</a></li>
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Cookie Policy</a></li>
-                            <li><a href="#">FAQs</a></li>
-                            <li><a href="#">Support</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-section contact-info">
-                        <h4>Contact Us</h4>
-                        <p>123, Some Street,<br>
-                           Some Building,<br>
-                           Colombo, 00700</p>
-                        <p>Email: contact@megacity.com<br>
-                           Phone: +94 11 234 5678</p>
-                        <div class="social-links">
-                            <a href="#">📱</a>
-                            <a href="#">📘</a>
-                            <a href="#">📸</a>
-                            <a href="#">🐦</a>
-                        </div>
+        <div class="lenear-pattern"></div>
+        <div class="checker-pattern"></div>
+        <div class="checker-pattern2"></div>
+        <div class="lenear-pattern"></div>
+        <footer>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.jsp">Home</a></li>
+                        <li><a href="booking.jsp">Book a Ride</a></li>
+                        <li><a href="#">Our Services</a></li>
+                        <li><a href="support.jsp">About Us</a></li>
+                        <li><a href="profile.jsp">Profile</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="#">Airport Transfer</a></li>
+                        <li><a href="#">Corporate Travel</a></li>
+                        <li><a href="#">Wedding Cars</a></li>
+                        <li><a href="#">Budget Packages</a></li>
+                        <li><a href="#">Special Offers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Terms & Conditions</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section contact-info">
+                    <h4>Contact Us</h4>
+                    <p>123, Some Street,<br>
+                       Some Building,<br>
+                       Colombo, 00700</p>
+                    <p>Email: contact@megacity.com<br>
+                       Phone: +94 11 234 5678</p>
+                    <div class="social-links">
+                        <a href="#">📱</a>
+                        <a href="#">📘</a>
+                        <a href="#">📸</a>
+                        <a href="#">🐦</a>
                     </div>
                 </div>
-                <div class="footer-bottom">
-                    <p>&copy; 2025 MegaCity. All rights reserved.</p>
-                </div>
-            </footer>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MegaCity. All rights reserved.</p>
+            </div>
+        </footer>
     </div>
 
     <script>
-        const menuBtn = document.querySelector('.menu-btn');
-        const navLinks = document.querySelector('.nav-links');
+        document.addEventListener('DOMContentLoaded', async function () {
+                const loggedInUserJSON = sessionStorage.getItem('loggedInUser');
 
-        menuBtn.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
-    </script>
+                if (!loggedInUserJSON) {
+                    console.error("User is not logged in. Redirecting to login page.");
+                    window.location.href = 'login.jsp';
+                    return;
+                }
+
+                const loggedInUser = JSON.parse(loggedInUserJSON);
+                console.log("User session data:", loggedInUser);
+
+                // Load profile ONLY for customers
+                if (loggedInUser.userType === 'customer') {
+                    try {
+                        await loadUserProfile(loggedInUser);
+                    } catch (error) {
+                        console.error("Error loading user profile:", error);
+                        document.getElementById('profileContent').innerHTML = `
+                            <div class="error">
+                                <h3>Error Loading Profile</h3>
+                                <p>There was an error loading your profile information. Please try again later.</p>
+                                <button class="action-button secondary-button" onclick="location.reload()">Retry</button>
+                            </div>
+                        `;
+                    }
+                } else {
+                    // Admins do not need to load from API, just show their stored session data
+                    displayAdminProfile(loggedInUser);
+                }
+            });
+
+            async function loadUserProfile(userData) {
+                console.log("Fetching user data from API...");
+
+                let userDetails = userData;
+
+                try {
+                    const response = await fetch(`http://localhost:8080/rest_service/api/users/${userData.userId}`);
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+
+                    const apiUserData = await response.json();
+                    userDetails = { ...userData, ...apiUserData };
+                    console.log("User details from API:", userDetails);
+                } catch (error) {
+                    console.warn("Failed to fetch user details from API. Using sessionStorage data.", error);
+                }
+
+                displayCustomerProfile(userDetails);
+            }
+
+            function displayCustomerProfile(userDetails) {
+                document.getElementById('profileContent').innerHTML = `
+                    <div class="profile-header">
+                        <div class="profile-avatar">${userDetails.username.charAt(0).toUpperCase()}</div>
+                        <div class="profile-info">
+                            <h2>${userDetails.username}</h2>
+                            <p>${userDetails.email}</p>
+                            <p>Customer</p>
+                        </div>
+                    </div>
+
+                    <div class="profile-sections">
+                        <div class="profile-section">
+                            <h3>Personal Information</h3>
+                            <form id="profileForm">
+                                <div class="profile-field">
+                                    <label for="fullName">Full Name</label>
+                                    <input type="text" id="fullName" value="${userDetails.username}">
+                                </div>
+                                <div class="profile-field">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" value="${userDetails.email}" readonly>
+                                </div>
+                                <div class="profile-field">
+                                    <label for="phone">Phone Number</label>
+                                    <input type="tel" id="phone" value="${userDetails.tel || userDetails.phone || ''}">
+                                </div>
+                                <div class="profile-field">
+                                    <label for="identity">Identity/NIC</label>
+                                    <input type="text" id="identity" value="${userDetails.identity || ''}">
+                                </div>
+                                <div class="action-buttons">
+                                    <button type="button" class="action-button secondary-button" id="changePasswordBtn">Change Password</button>
+                                    <button type="button" class="action-button primary-button" id="saveProfileBtn">Save Changes</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="profile-section">
+                            <h3>Account Settings</h3>
+                            <div class="profile-field">
+                                <label>User ID</label>
+                                <input type="text" value="${userDetails.userId}" readonly>
+                            </div>
+                            <div class="profile-field">
+                                <label>Account Status</label>
+                                <input type="text" value="Active" readonly>
+                            </div>
+                            <div class="action-buttons">
+                                <button type="button" class="action-button logout-button" id="logoutBtn">Logout</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('logoutBtn').addEventListener('click', logout);
+                document.getElementById('saveProfileBtn').addEventListener('click', saveProfile);
+                document.getElementById('changePasswordBtn').addEventListener('click', showChangePasswordDialog);
+            }
+
+            // Function for Admin Profile (No API Fetch)
+            function displayAdminProfile(adminData) {
+                document.getElementById('profileContent').innerHTML = `
+                    <div class="profile-header">
+                        <div class="profile-avatar">${adminData.username.charAt(0).toUpperCase()}</div>
+                        <div class="profile-info">
+                            <h2>${adminData.username}</h2>
+                            <p>${adminData.email}</p>
+                            <p>Administrator</p>
+                        </div>
+                    </div>
+                    <div class="profile-sections">
+                        <div class="profile-section">
+                            <h3>Admin Details</h3>
+                            <div class="profile-field">
+                                <label>Admin Name</label>
+                                <input type="text" value="${adminData.username}" readonly>
+                            </div>
+                            <div class="profile-field">
+                                <label>Email</label>
+                                <input type="text" value="${adminData.email}" readonly>
+                            </div>
+                            <div class="action-buttons">
+                                <button type="button" class="action-button logout-button" id="logoutBtn">Logout</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('logoutBtn').addEventListener('click', logout);
+            }
+
+            // Save profile changes (Only for Customers)
+            async function saveProfile() {
+                const loggedInUserJSON = sessionStorage.getItem('loggedInUser');
+                if (!loggedInUserJSON) return;
+
+                const userData = JSON.parse(loggedInUserJSON);
+                if (userData.userType !== 'customer') return;
+
+                const fullName = document.getElementById('fullName').value;
+                const phone = document.getElementById('phone').value;
+                const identity = document.getElementById('identity').value;
+
+                try {
+                    userData.username = fullName;
+                    userData.phone = phone;
+                    userData.identity = identity;
+
+                    sessionStorage.setItem('loggedInUser', JSON.stringify(userData));
+
+                    const updatedUser = {
+                        id: userData.userId,
+                        name: fullName,
+                        email: userData.email,
+                        pass: "", // Password update should be handled separately
+                        tel: phone,
+                        identity: identity
+                    };
+
+                    const response = await fetch('http://localhost:8080/rest_service/api/users', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(updatedUser)
+                    });
+
+                    if (response.ok) {
+                        alert('Profile updated successfully!');
+                    } else {
+                        throw new Error('Failed to update profile');
+                    }
+                } catch (error) {
+                    console.error("Error saving profile:", error);
+                    alert('There was an error updating your profile. Please try again.');
+                }
+            }
+
+            // Logout function
+            function logout() {
+                sessionStorage.removeItem('loggedInUser');
+                document.cookie = "loggedIn=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                window.location.href = 'login.jsp';
+            }
+
+            // Change password function placeholder
+            function showChangePasswordDialog() {
+                alert('Change password functionality would be implemented here');
+            }
+    </script>    
 </body>
 </html>

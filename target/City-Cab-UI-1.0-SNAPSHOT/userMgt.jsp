@@ -427,13 +427,13 @@
                         return `
                             <tr>
                                 <td>` + user.id + `</td>
-                                <td>` + user.name + `</td>
+                                <td>` + user.fullName + `</td>
                                 <td>` + user.email + `</td>
                                 <td>` + user.tel + `</td>
-                                <td>` + user.nic + `</td>
+                                <td>` + user.identity + `</td>
                                 <td>
-                                    <button class="action-btn edit-btn" onclick="openEditModal(${user.id}, '${user.name}', '${user.email}', '${user.tel}', '${user.nic}')">Edit</button>
-                                    <button class="action-btn delete-btn" onclick="openDeleteModal(${user.id})">Delete</button>
+                                    <button class="action-btn edit-btn" onclick="openEditModal(` + user.id + `,'` + user.fullName + `','` + user.email + `','` + user.tel + `','` + user.identity + `')">Edit</button>
+                                    <button class="action-btn delete-btn" onclick="openDeleteModal(` + user.id + `)">Delete</button>
                                 </td>
                             </tr>
                         `;
@@ -453,12 +453,12 @@
         }
 
         // Function to open edit modal
-        function openEditModal(id, name, email, tel, nic) {
+        function openEditModal(id, fullName, email, tel, identity) {
             document.getElementById('editUserId').value = id;
-            document.getElementById('editUserName').value = name;
+            document.getElementById('editUserName').value = fullName;
             document.getElementById('editUserEmail').value = email;
             document.getElementById('editUserPhone').value = tel;
-            document.getElementById('editUserNic').value = nic;
+            document.getElementById('editUserNic').value = identity;
             document.getElementById('editUserPassword').value = '';
             document.getElementById('editUserModal').style.display = 'block';
         }
@@ -481,20 +481,19 @@
             
             const id = document.getElementById('editUserId').value;
             const user = {
-                id: parseInt(id),
-                name: document.getElementById('editUserName').value,
+                fullName: document.getElementById('editUserName').value,
                 email: document.getElementById('editUserEmail').value,
                 tel: document.getElementById('editUserPhone').value,
-                nic: document.getElementById('editUserNic').value,
-                pass: document.getElementById('editUserPassword').value
+                identity: document.getElementById('editUserNic').value
             };
 
-            // If password is empty, remove it from the object (to keep the current password)
-            if (!user.pass) {
-                delete user.pass;
+            // If password is provided, include it
+            const password = document.getElementById('editUserPassword').value;
+            if (password) {
+                user.pass = password;
             }
 
-            fetch(USER_API_URL, {
+            fetch(`${USER_API_URL}/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -505,6 +504,9 @@
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
+                return response.json();
+            })
+            .then(data => {
                 closeAllModals();
                 showMessage('User updated successfully!', 'success');
                 loadUserData();
@@ -526,6 +528,9 @@
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
+                return response.json();
+            })
+            .then(data => {
                 closeAllModals();
                 showMessage('User deleted successfully!', 'success');
                 loadUserData();
@@ -562,4 +567,4 @@
         });
     </script>
 </body>
-</html
+</html>

@@ -386,10 +386,10 @@
                     return `
                         <tr>
                             <td>` + user.id + `</td>
-                            <td>` + user.name + `</td>
+                            <td>` + user.fullName + `</td>
                             <td>` + user.email + `</td>
                             <td>` + user.tel + `</td>
-                            <td>` + user.nic + `</td>
+                            <td>` + user.identity + `</td>
                         </tr>
                     `;
                 }).join('');

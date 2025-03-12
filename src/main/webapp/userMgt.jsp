@@ -304,9 +304,9 @@
                     <a href="administrator.jsp">Home</a>
                     <a href="adminMgt.jsp">Admins</a>
                     <a href="#" class="active">Users</a>
-                    <a href="#">Bookings</a>
-                    <a href="#">Payments</a>
-                    <a href="#">Vehicles</a>
+                    <a href="#">Requests</a>
+                    <a href="#">Confirms</a>
+                    <a href="vehiclesMgt.jsp">Vehicles</a>
                 </div>
                 <button onclick="location.href='login.jsp';" class="logout-btn">Logout</button>
             </div>

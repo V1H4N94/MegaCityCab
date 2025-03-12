@@ -206,9 +206,9 @@
             <a href="#" class="active">Home</a>
             <a href="adminMgt.jsp">Admins</a>
             <a href="userMgt.jsp">Users</a>
-            <a href="#">Bookings</a>
-            <a href="#">Payments</a>
-            <a href="#">Vehicles</a>
+            <a href="#">Requests</a>
+            <a href="#">Confirms</a>
+            <a href="vehiclesMgt.jsp">Vehicles</a>
             
         </div>
         <button onclick="location.href='login.jsp';" class="logout-btn">Logout</button>
@@ -264,7 +264,7 @@
 
             <!-- Bookings Card -->
             <div class="card">
-                <h2>Bookings</h2>
+                <h2>Requests</h2>
                 <div class="card-content">
                     <!-- Your code here -->
                 </div>
@@ -272,7 +272,7 @@
 
             <!-- Payments Card -->
             <div class="card">
-                <h2>Payments</h2>
+                <h2>Confirms</h2>
                 <div class="card-content">
                     <!-- Your code here -->
                 </div>
@@ -281,14 +281,6 @@
             <!-- Vehicles Card -->
             <div class="card">
                 <h2>Vehicles</h2>
-                <div class="card-content">
-                    <!-- Your code here -->
-                </div>
-            </div>
-
-            <!-- Drivers Card -->
-            <div class="card">
-                <h2>Drivers</h2>
                 <div class="card-content">
                     <!-- Your code here -->
                 </div>

@@ -313,9 +313,9 @@
                     <a href="administrator.jsp">Home</a>
                     <a href="#" class="active">Admins</a>
                     <a href="userMgt.jsp">Users</a>
-                    <a href="#">Bookings</a>
-                    <a href="#">Payments</a>
-                    <a href="#">Vehicles</a>
+                    <a href="bookingReq.jsp">Requests</a>
+                    <a href="#">Confirms</a>
+                    <a href="vehiclesMgt.jsp">Vehicles</a>
                 </div>
                 <button onclick="location.href='login.jsp';" class="logout-btn">Logout</button>
             </div>

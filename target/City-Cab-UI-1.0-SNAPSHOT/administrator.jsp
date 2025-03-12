@@ -1,10 +1,3 @@
-<%-- 
-    Document   : administrator
-    Created on : Feb 17, 2025, 11:33:52 AM
-    Author     : User
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -193,6 +186,50 @@
             grid-column: 1 / -1;
         }
         
+        /* Action buttons styles */
+        .action-btn {
+            padding: 5px 10px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .action-btn:hover {
+            opacity: 0.8;
+        }
+
+        .success-message {
+            background-color: rgba(76, 175, 80, 0.3);
+            color: #4CAF50;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .error-message {
+            background-color: rgba(244, 67, 54, 0.3);
+            color: #f44336;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        #message-container {
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
@@ -261,8 +298,31 @@
                     </table>
                 </div>
             </div>
+            
+            <!-- Vehicles Card -->
+            <div class="card full-width">
+                <h2>Vehicles</h2>
+                <div class="card-content">
+                    <div id="message-container"></div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>License</th>
+                                <th>Owner</th>
+                                <th>Brand</th>
+                                <th>Model</th>
+                                <th>Category</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vehicleTableBody">
+                            <!-- Vehicle data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-            <!-- Bookings Card -->
+            <!-- Requests Card -->
             <div class="card">
                 <h2>Requests</h2>
                 <div class="card-content">
@@ -270,7 +330,7 @@
                 </div>
             </div>
 
-            <!-- Payments Card -->
+            <!-- Confirms Card -->
             <div class="card">
                 <h2>Confirms</h2>
                 <div class="card-content">
@@ -278,18 +338,11 @@
                 </div>
             </div>
 
-            <!-- Vehicles Card -->
-            <div class="card">
-                <h2>Vehicles</h2>
-                <div class="card-content">
-                    <!-- Your code here -->
-                </div>
-            </div>
+            
         </div>
     </div>
     
     <script>
-        
         function loadAdminData() {
             const tableBody = document.getElementById('adminTableBody');
             console.log('Loading admin data...'); 
@@ -399,8 +452,61 @@
                     </tr>`;
             });
         }
-
         
+        const VEHICLE_API_URL = 'http://localhost:8080/rest_service/api/cars';
+        
+        // Function to show message
+        function showMessage(message, type) {
+            const container = document.getElementById('message-container');
+            container.innerHTML = '<div class="' + type + '-message">' + message + '</div>';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(function() {
+                container.innerHTML = '';
+            }, 5000);
+        }
+        
+        // Function to load vehicle data
+        function loadVehicleData() {
+            const tableBody = document.getElementById('vehicleTableBody');
+            tableBody.innerHTML = '<tr><td colspan="7" class="loading">Loading vehicles...</td></tr>';
+            fetch(VEHICLE_API_URL)
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('HTTP error! status: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(function(vehicles) {
+                    if (!vehicles || vehicles.length === 0) {
+                        tableBody.innerHTML = '<tr><td colspan="7" class="loading">No vehicles found</td></tr>';
+                        return;
+                    }
+                    let tableContent = '';
+                    for (let i = 0; i < vehicles.length; i++) {
+                        const vehicle = vehicles[i];
+                        tableContent += '<tr>' +
+                            '<td>' + vehicle.id + '</td>' +
+                            '<td>' + vehicle.license + '</td>' +
+                            '<td>' + vehicle.owner + '</td>' +
+                            '<td>' + vehicle.brand + '</td>' +
+                            '<td>' + vehicle.model + '</td>' +
+                            '<td>' + vehicle.category + '</td>'
+                        '</tr>';
+                    }
+                    
+                    tableBody.innerHTML = tableContent;
+                })
+                .catch(function(error) {
+                    console.error('Error loading vehicles:', error);
+                    tableBody.innerHTML = '<tr>' +
+                        '<td colspan="7" class="error-message">' +
+                            'Error loading vehicles: ' + error.message +
+                        '</td>' +
+                    '</tr>';
+                });
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM Content Loaded'); 
 
@@ -423,6 +529,7 @@
 
             loadAdminData();
             loadUserData();
+            loadVehicleData();
         });
     </script>
 </body>

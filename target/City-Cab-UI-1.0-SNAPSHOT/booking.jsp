@@ -578,7 +578,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="submit-btn">Reserve Vehicle</button>
+                    <button type="submit" class="submit-btn">Proceed to Payment</button>
                 </form>
                 
             </section>
@@ -653,6 +653,226 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+                // Function to check login and load user data from cookies
+                function loadUserDataFromCookies() {
+                    // Get the cookie values
+                    const cookies = document.cookie.split(';');
+                    const userCookie = cookies.find(cookie => cookie.trim().startsWith('loggedInUser='));
+
+                    if (!userCookie) {
+                        // No cookie found, redirect to login
+                        window.location.href = 'login.jsp';
+                        return false;
+                    }
+
+                    // Extract user data from cookies
+                    const userEmail = decodeURIComponent(userCookie.split('=')[1].trim());
+
+                    // Get user ID
+                    const idCookie = cookies.find(cookie => cookie.trim().startsWith('userId='));
+                    const userId = idCookie ? idCookie.split('=')[1].trim() : '';
+
+                    // Get full name
+                    const nameCookie = cookies.find(cookie => cookie.trim().startsWith('fullName='));
+                    const fullName = nameCookie ? decodeURIComponent(nameCookie.split('=')[1].trim()) : '';
+
+                    // Get telephone
+                    const telCookie = cookies.find(cookie => cookie.trim().startsWith('telephone='));
+                    const telephone = telCookie ? decodeURIComponent(telCookie.split('=')[1].trim()) : '';
+
+                    // Get identity
+                    const identityCookie = cookies.find(cookie => cookie.trim().startsWith('identity='));
+                    const identity = identityCookie ? decodeURIComponent(identityCookie.split('=')[1].trim()) : '';
+
+                    // Get user type
+                    const typeCookie = cookies.find(cookie => cookie.trim().startsWith('userType='));
+                    const userType = typeCookie ? typeCookie.split('=')[1].trim() : 'customer';
+
+                    // User is logged in, you can use all the variables
+                    console.log(`Logged in as: ${userEmail} (${userType})`);
+                    console.log(`User ID: ${userId}, Name: ${fullName}, Tel: ${telephone}, Identity: ${identity}`);
+
+                    // Store user data in a global variable for use in the booking process
+                    window.userData = {
+                        userId: userId,
+                        fullName: fullName || userEmail.split('@')[0],
+                        email: userEmail,
+                        telephone: telephone, 
+                        identity: identity,
+                        userType: userType
+                    };
+
+                    // Store user data in sessionStorage for profile page
+                    if (userEmail && userId) {
+                        const userData = {
+                            userId: userId,
+                            username: fullName || userEmail.split('@')[0],
+                            email: userEmail,
+                            tel: telephone,
+                            phone: telephone,
+                            identity: identity,
+                            userType: userType || 'customer'
+                        };
+                        sessionStorage.setItem('loggedInUser', JSON.stringify(userData));
+                    }
+
+                    // Show a popup notification
+                    showUserNotification(window.userData.fullName);
+
+                    return true;
+                }
+
+                // Function to show user notification popup
+                function showUserNotification(fullName) {
+                    // Create modal elements
+                    const modalOverlay = document.createElement('div');
+                    modalOverlay.className = 'modal-overlay';
+                    modalOverlay.style.position = 'fixed';
+                    modalOverlay.style.top = '0';
+                    modalOverlay.style.left = '0';
+                    modalOverlay.style.width = '100%';
+                    modalOverlay.style.height = '100%';
+                    modalOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+                    modalOverlay.style.display = 'flex';
+                    modalOverlay.style.justifyContent = 'center';
+                    modalOverlay.style.alignItems = 'center';
+                    modalOverlay.style.zIndex = '9999';
+
+                    const modalContent = document.createElement('div');
+                    modalContent.className = 'modal-content';
+                    modalContent.style.backgroundColor = '#fff';
+                    modalContent.style.padding = '2rem';
+                    modalContent.style.borderRadius = '8px';
+                    modalContent.style.maxWidth = '450px';
+                    modalContent.style.textAlign = 'center';
+                    modalContent.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.2)';
+                    modalContent.style.position = 'relative';
+
+                    const closeButton = document.createElement('button');
+                    closeButton.innerHTML = '×';
+                    closeButton.style.position = 'absolute';
+                    closeButton.style.top = '10px';
+                    closeButton.style.right = '15px';
+                    closeButton.style.border = 'none';
+                    closeButton.style.background = 'none';
+                    closeButton.style.fontSize = '1.5rem';
+                    closeButton.style.cursor = 'pointer';
+                    closeButton.style.color = '#2c2c2c';
+
+                    const title = document.createElement('h3');
+                    title.textContent = 'IMPORTANT!';
+                    title.style.color = '#2c2c2c';
+                    title.style.marginBottom = '1rem';
+                    title.style.fontSize = '1.5rem';
+
+                    const message = document.createElement('p');
+                    message.innerHTML = `You are booking as <strong>` + fullName + `</strong>`;
+                    message.style.marginBottom = '1.5rem';
+                    message.style.fontSize = '1.1rem';
+                    message.style.color = '#666';
+
+                    const continueButton = document.createElement('button');
+                    continueButton.textContent = 'Continue';
+                    continueButton.style.backgroundColor = '#FFD700';
+                    continueButton.style.color = '#2c2c2c';
+                    continueButton.style.border = 'none';
+                    continueButton.style.padding = '0.75rem 2rem';
+                    continueButton.style.borderRadius = '4px';
+                    continueButton.style.fontSize = '1rem';
+                    continueButton.style.fontWeight = 'bold';
+                    continueButton.style.cursor = 'pointer';
+                    continueButton.style.transition = 'all 0.3s ease';
+
+                    // Hover effect for continue button
+                    continueButton.onmouseover = function() {
+                        this.style.backgroundColor = '#2c2c2c';
+                        this.style.color = '#FFD700';
+                    };
+                    continueButton.onmouseout = function() {
+                        this.style.backgroundColor = '#FFD700';
+                        this.style.color = '#2c2c2c';
+                    };
+
+                    // Close the modal on button click
+                    closeButton.onclick = function() {
+                        document.body.removeChild(modalOverlay);
+                    };
+                    continueButton.onclick = function() {
+                        document.body.removeChild(modalOverlay);
+                    };
+
+                    // Assemble the modal
+                    modalContent.appendChild(closeButton);
+                    modalContent.appendChild(title);
+                    modalContent.appendChild(message);
+                    modalContent.appendChild(continueButton);
+                    modalOverlay.appendChild(modalContent);
+
+                    // Add to body
+                    document.body.appendChild(modalOverlay);
+
+                    // Auto close after 5 seconds
+                    setTimeout(function() {
+                        if (document.body.contains(modalOverlay)) {
+                            document.body.removeChild(modalOverlay);
+                        }
+                    }, 5000);
+                }
+
+                // Function to handle logout
+                function logout() {
+                    // Clear all cookies
+                    document.cookie = "loggedInUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    document.cookie = "userType=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    document.cookie = "userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    document.cookie = "fullName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    document.cookie = "telephone=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    document.cookie = "identity=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+                    // Redirect to login page
+                    window.location.href = 'login.jsp';
+                }
+
+                // Add event listener for booking form submission
+                const bookingForm = document.querySelector('.booking-form');
+                if (bookingForm) {
+                    bookingForm.addEventListener('submit', function(event) {
+                        // If you want to add user data to the form before submission
+                        if (window.userData) {
+                            // Add hidden fields with user data
+                            const userId = document.createElement('input');
+                            userId.type = 'hidden';
+                            userId.name = 'userId';
+                            userId.value = window.userData.userId;
+                            this.appendChild(userId);
+
+                            const userEmail = document.createElement('input');
+                            userEmail.type = 'hidden';
+                            userEmail.name = 'userEmail';
+                            userEmail.value = window.userData.email;
+                            this.appendChild(userEmail);
+
+                            // Add more fields as needed
+                        }
+                    });
+                }
+
+                // Load user data when the page loads
+                loadUserDataFromCookies();
+
+                // Add event listener for menu button
+                const menuBtn = document.querySelector('.menu-btn');
+                const navLinks = document.querySelector('.nav-links');
+
+                if (menuBtn) {
+                    menuBtn.addEventListener('click', () => {
+                        navLinks.classList.toggle('active');
+                    });
+                }
+            });
+        
+        
         const menuBtn = document.querySelector('.menu-btn');
         const navLinks = document.querySelector('.nav-links');
 
@@ -754,6 +974,230 @@
                         vehicleDropdown.innerHTML = '<option value="">Error loading vehicles</option>';
                     });
             });
+        });
+                document.addEventListener('DOMContentLoaded', function() {
+                    const bookingForm = document.querySelector('.booking-form');
+
+                    if (bookingForm) {
+                        bookingForm.addEventListener('submit', function(event) {
+                            event.preventDefault(); // Prevent default form submission
+
+                            // Get form values
+                            const packageSelect = document.getElementById('pkgPlans');
+                            const packageId = packageSelect.value;
+                            const packageName = packageSelect.options[packageSelect.selectedIndex].text;
+
+                            const pickupDate = document.getElementById('pickupDate').value;
+                            const pickupLocation = document.getElementById('pickupLocation').value;
+
+                            const vehicleSelect = document.getElementById('vehicleType');
+                            const vehicleId = vehicleSelect.value;
+                            const vehicleName = vehicleSelect.options[vehicleSelect.selectedIndex].text;
+
+                            const agreeTerms = document.getElementById('agreeTerms').checked;
+
+                            // Validate form
+                            if (!packageId || !pickupDate || !pickupLocation || !vehicleId || !agreeTerms) {
+                                alert('Please fill in all fields and agree to the terms and conditions.');
+                                return;
+                            }
+
+                            // Get user email from session data
+                            let userEmail = '';
+                            if (window.userData && window.userData.email) {
+                                userEmail = window.userData.email;
+                            } else {
+                                // Try to get from cookies as fallback
+                                const cookies = document.cookie.split(';');
+                                const userCookie = cookies.find(cookie => cookie.trim().startsWith('loggedInUser='));
+                                if (userCookie) {
+                                    userEmail = decodeURIComponent(userCookie.split('=')[1].trim());
+                                }
+                            }
+
+                            if (!userEmail) {
+                                alert('User session not found. Please log in again.');
+                                window.location.href = 'login.jsp';
+                                return;
+                            }
+
+                            // Calculate payment based on package
+                            let payment = 0;
+                            switch (packageName.toLowerCase()) {
+                                case 'basic package':
+                                    payment = 15000;
+                                    break;
+                                case 'economy package':
+                                    payment = 25000;
+                                    break;
+                                case 'premium package':
+                                    payment = 40000;
+                                    break;
+                                case 'premium pro package':
+                                    payment = 50000;
+                                    break;
+                                default:
+                                    // Default fallback
+                                    payment = 15000;
+                            }
+
+                            // Create request object
+                            const bookingRequest = {
+                                email: userEmail,
+                                packageType: packageId,
+                                date: pickupDate,
+                                location: pickupLocation,
+                                carType: vehicleId,
+                                status: "pending", // This will be the default in your MySQL table
+                                payment: payment
+                            };
+
+                            // Show loading indicator
+                            const submitBtn = document.querySelector('.submit-btn');
+                            const originalBtnText = submitBtn.textContent;
+                            submitBtn.textContent = 'Processing...';
+                            submitBtn.disabled = true;
+
+                            // Send request to API
+                            fetch('http://localhost:8080/rest_service/api/bookingRequests', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Access-Control-Allow-Origin': '*'
+                                },
+                                body: JSON.stringify(bookingRequest)
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok: ' + response.statusText);
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                // Show success message
+                                showBookingNotification('Success', 'Your booking request has been submitted successfully!', true);
+
+                                // Reset form after successful submission
+                                setTimeout(() => {
+                                    window.location.href = 'index.jsp'; // Redirect to home page or another page
+                                }, 2000);
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                showBookingNotification('Error', 'Failed to submit booking request. Please try again.', false);
+                            })
+                            .finally(() => {
+                                // Reset button state
+                                submitBtn.textContent = originalBtnText;
+                                submitBtn.disabled = false;
+                            });
+                        });
+                    }
+
+                    // Function to show booking notification
+                    function showBookingNotification(title, message, isSuccess) {
+                        // Create modal elements
+                        const modalOverlay = document.createElement('div');
+                        modalOverlay.className = 'modal-overlay';
+                        modalOverlay.style.position = 'fixed';
+                        modalOverlay.style.top = '0';
+                        modalOverlay.style.left = '0';
+                        modalOverlay.style.width = '100%';
+                        modalOverlay.style.height = '100%';
+                        modalOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+                        modalOverlay.style.display = 'flex';
+                        modalOverlay.style.justifyContent = 'center';
+                        modalOverlay.style.alignItems = 'center';
+                        modalOverlay.style.zIndex = '9999';
+
+                        const modalContent = document.createElement('div');
+                        modalContent.className = 'modal-content';
+                        modalContent.style.backgroundColor = '#fff';
+                        modalContent.style.padding = '2rem';
+                        modalContent.style.borderRadius = '8px';
+                        modalContent.style.maxWidth = '450px';
+                        modalContent.style.textAlign = 'center';
+                        modalContent.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.2)';
+                        modalContent.style.position = 'relative';
+
+                        const closeButton = document.createElement('button');
+                        closeButton.innerHTML = '×';
+                        closeButton.style.position = 'absolute';
+                        closeButton.style.top = '10px';
+                        closeButton.style.right = '15px';
+                        closeButton.style.border = 'none';
+                        closeButton.style.background = 'none';
+                        closeButton.style.fontSize = '1.5rem';
+                        closeButton.style.cursor = 'pointer';
+                        closeButton.style.color = '#2c2c2c';
+
+                        const modalTitle = document.createElement('h3');
+                        modalTitle.textContent = title;
+                        modalTitle.style.color = isSuccess ? '#2c2c2c' : '#d32f2f';
+                        modalTitle.style.marginBottom = '1rem';
+                        modalTitle.style.fontSize = '1.5rem';
+
+                        const modalMessage = document.createElement('p');
+                        modalMessage.textContent = message;
+                        modalMessage.style.marginBottom = '1.5rem';
+                        modalMessage.style.fontSize = '1.1rem';
+                        modalMessage.style.color = '#666';
+
+                        const continueButton = document.createElement('button');
+                        continueButton.textContent = 'OK';
+                        continueButton.style.backgroundColor = isSuccess ? '#FFD700' : '#d32f2f';
+                        continueButton.style.color = isSuccess ? '#2c2c2c' : '#fff';
+                        continueButton.style.border = 'none';
+                        continueButton.style.padding = '0.75rem 2rem';
+                        continueButton.style.borderRadius = '4px';
+                        continueButton.style.fontSize = '1rem';
+                        continueButton.style.fontWeight = 'bold';
+                        continueButton.style.cursor = 'pointer';
+                        continueButton.style.transition = 'all 0.3s ease';
+
+                        // Hover effect for continue button
+                        continueButton.onmouseover = function() {
+                            if (isSuccess) {
+                                this.style.backgroundColor = '#2c2c2c';
+                                this.style.color = '#FFD700';
+                            } else {
+                                this.style.backgroundColor = '#b71c1c';
+                            }
+                        };
+                        continueButton.onmouseout = function() {
+                            if (isSuccess) {
+                                this.style.backgroundColor = '#FFD700';
+                                this.style.color = '#2c2c2c';
+                            } else {
+                                this.style.backgroundColor = '#d32f2f';
+                            }
+                        };
+
+                        // Close the modal on button click
+                        closeButton.onclick = function() {
+                            document.body.removeChild(modalOverlay);
+                        };
+                        continueButton.onclick = function() {
+                            document.body.removeChild(modalOverlay);
+                        };
+
+                        // Assemble the modal
+                        modalContent.appendChild(closeButton);
+                        modalContent.appendChild(modalTitle);
+                        modalContent.appendChild(modalMessage);
+                        modalContent.appendChild(continueButton);
+                        modalOverlay.appendChild(modalContent);
+
+                        // Add to body
+                        document.body.appendChild(modalOverlay);
+
+                        // Auto close after 5 seconds
+                        setTimeout(function() {
+                            if (document.body.contains(modalOverlay)) {
+                                document.body.removeChild(modalOverlay);
+                            }
+                        }, 5000);
+                    }
         });
     </script>
 </body>

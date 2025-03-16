@@ -272,17 +272,10 @@
 
                 for (let admin of admins) {
                     if (admin.user === email && admin.pass === password) {
-                        // Store admin data in session storage
-                        sessionStorage.setItem('loggedInUser', JSON.stringify({
-                            email: admin.user,
-                            userType: 'admin',
-                            userId: admin.id,
-                            username: admin.name || admin.user
-                        }));
-                        
-                        // Create a cookie with basic login info (non-sensitive)
-                        document.cookie = `loggedIn=true; path=/; max-age=${60*60*24}`; // 24 hours
-                        
+                        // Store admin data
+                        document.cookie = "loggedInUser=" + encodeURIComponent(email) + "; path=/; max-age=86400";
+                        document.cookie = "userType=admin; path=/; max-age=86400";
+
                         window.location.href = 'administrator.jsp';
                         return;
                     }
@@ -294,18 +287,24 @@
 
                 for (let user of users) {
                     if (user.email === email && user.pass === password) {
-                        // Store user data in session storage
-                        sessionStorage.setItem('loggedInUser', JSON.stringify({
-                            email: user.email,
-                            userType: 'customer',
-                            userId: user.id,
-                            username: user.name,
-                            phone: user.phone || ''
-                        }));
-                        
-                        // Create a cookie with basic login info (non-sensitive)
-                        document.cookie = `loggedIn=true; path=/; max-age=${60*60*24}`; // 24 hours
-                        
+                        // Store all user data in cookies
+                        document.cookie = "userId=" + user.id + "; path=/; max-age=86400";
+                        document.cookie = "loggedInUser=" + encodeURIComponent(email) + "; path=/; max-age=86400";
+                        document.cookie = "fullName=" + encodeURIComponent(user.fullName) + "; path=/; max-age=86400";
+                        document.cookie = "telephone=" + encodeURIComponent(user.tel) + "; path=/; max-age=86400";
+                        document.cookie = "identity=" + encodeURIComponent(user.identity) + "; path=/; max-age=86400";
+                        document.cookie = "userType=customer; path=/; max-age=86400";
+
+                        // Alternatively, you could store all user data in a single JSON cookie
+                        // const userData = JSON.stringify({
+                        //     id: user.id,
+                        //     email: user.email,
+                        //     fullName: user.fullName,
+                        //     tel: user.tel,
+                        //     identity: user.identity
+                        // });
+                        // document.cookie = "userData=" + encodeURIComponent(userData) + "; path=/; max-age=86400";
+
                         window.location.href = 'index.jsp';
                         return;
                     }

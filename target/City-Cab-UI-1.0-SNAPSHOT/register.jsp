@@ -302,11 +302,11 @@
             // Create a user object that matches your User class structure
             const user = {
                 id: 0, // The ID will likely be assigned by the database
-                name: fullName,
+                fullName: fullName,
                 pass: password,
                 email: email,
                 tel: phone,
-                nic: identity
+                identity: identity
             };
 
             // Show loading state

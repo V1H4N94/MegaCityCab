@@ -323,20 +323,54 @@
             </div>
 
             <!-- Requests Card -->
-            <div class="card">
-                <h2>Requests</h2>
+            <div class="card full-width">
+                <h2>Pending Requests</h2>
                 <div class="card-content">
-                    <!-- Your code here -->
+                    <div id="request-message-container"></div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Email</th>
+                                <th>Package</th>
+                                <th>Date</th>
+                                <th>Location</th>
+                                <th>Car Type</th>
+                                <th>Payment (Rs)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="requestTableBody">
+                            <!-- Booking request data will be populated here -->
+                        </tbody>
+                    </table>
                 </div>
-            </div>
+            </div
 
             <!-- Confirms Card -->
-            <div class="card">
-                <h2>Confirms</h2>
-                <div class="card-content">
-                    <!-- Your code here -->
-                </div>
+           <div class="card full-width">
+            <h2>Confirmed Bookings</h2>
+            <div class="card-content">
+                <div id="confirms-message-container"></div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Email</th>
+                            <th>Package</th>
+                            <th>Date</th>
+                            <th>Location</th>
+                            <th>Car Type</th>
+                            <th>Payment (Rs)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="confirmsTableBody">
+                        <!-- Confirmed booking data will be populated here -->
+                    </tbody>
+                </table>
             </div>
+        </div>
 
             
         </div>
@@ -506,6 +540,244 @@
                     '</tr>';
                 });
         }
+        
+        // Function to show request message
+        function showRequestMessage(message, type) {
+            const container = document.getElementById('request-message-container');
+            container.innerHTML = '<div class="' + type + '-message">' + message + '</div>';
+
+            // Auto-hide after 5 seconds
+            setTimeout(function() {
+                container.innerHTML = '';
+            }, 5000);
+        }
+
+        // Function to load booking request data
+        function loadBookingRequestData() {
+            const tableBody = document.getElementById('requestTableBody');
+            tableBody.innerHTML = '<tr><td colspan="8" class="loading">Loading booking requests...</td></tr>';
+
+            fetch('http://localhost:8080/rest_service/api/bookingRequests')
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('HTTP error! status: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(function(bookings) {
+                    // Filter only pending bookings
+                    const pendingBookings = Array.isArray(bookings) 
+                        ? bookings.filter(booking => booking.status === "pending")
+                        : [bookings].filter(booking => booking.status === "pending");
+
+                    if (!pendingBookings || pendingBookings.length === 0) {
+                        tableBody.innerHTML = '<tr><td colspan="8" class="loading">No pending booking requests found</td></tr>';
+                        return;
+                    }
+
+                    let tableContent = '';
+                    for (let i = 0; i < pendingBookings.length; i++) {
+                        const booking = pendingBookings[i];
+                        tableContent += '<tr>' +
+                            '<td>' + booking.id + '</td>' +
+                            '<td>' + booking.email + '</td>' +
+                            '<td>' + getPackageType(booking.packageType) + '</td>' +
+                            '<td>' + booking.date + '</td>' +
+                            '<td>' + booking.location + '</td>' +
+                            '<td>' + getCarType(booking.carType) + '</td>' +
+                            '<td>' + booking.payment.toFixed(2) + '</td>' +
+                            '<td>' +
+                                '<button class="action-btn edit-btn" onclick="approveBooking(' + booking.id + ')">Approve</button>' +
+                                '<button class="action-btn delete-btn" onclick="rejectBooking(' + booking.id + ')">Reject</button>' +
+                            '</td>' +
+                        '</tr>';
+                    }
+
+                    tableBody.innerHTML = tableContent;
+                })
+                .catch(function(error) {
+                    console.error('Error loading booking requests:', error);
+                    tableBody.innerHTML = '<tr>' +
+                        '<td colspan="8" class="error-message">' +
+                            'Error loading booking requests: ' + error.message +
+                        '</td>' +
+                    '</tr>';
+                });
+        }
+
+        // Helper function to convert package type codes to readable text
+        function getPackageType(packageTypeCode) {
+            switch(packageTypeCode) {
+                case "1": return "Basic";
+                case "2": return "Economy";
+                case "3": return "Premium";
+                case "4": return "Premium Pro";
+                default: return packageTypeCode;
+            }
+        }
+
+        // Helper function to convert car type codes to readable text
+        function getCarType(carTypeCode) {
+            switch(carTypeCode) {
+                case "1": return "Sedan";
+                case "2": return "Compact";
+                case "3": return "Minibus";
+                case "4": return "Sub Compact";
+                case "5": return "Luxury Sedan";
+                case "6": return "Rugged SUV";
+                case "7": return "Pickup";
+                case "8": return "Sport";
+                default: return carTypeCode;
+            }
+        }
+
+        // Function to approve a booking
+//        function approveBooking(bookingId) {
+//            updateBookingStatus(bookingId, "approved");
+//        }
+
+        // Function to reject a booking
+        function rejectBooking(bookingId) {
+            updateBookingStatus(bookingId, "rejected");
+        }
+
+        // Function to update booking status
+            function approveBooking(bookingId) {
+            // First, fetch the full booking data
+            fetch('http://localhost:8080/rest_service/api/bookingRequests/' + bookingId)
+            .then(response => response.json())
+            .then(booking => {
+                // Update the status field
+                booking.status = "approved";
+
+                // Send the full booking data back to the server
+                return fetch('http://localhost:8080/rest_service/api/bookingRequests/approve/' + bookingId, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(booking)
+                });
+            })
+            .then(response => response.json())
+            .then(data => {
+                showRequestMessage('Booking #' + bookingId + ' approved successfully!', 'success');
+                loadBookingRequestData();
+            })
+            .catch(error => {
+                console.error('Error approving booking:', error);
+                showRequestMessage('Error approving booking: ' + error.message, 'error');
+            });
+        }
+
+        function rejectBooking(bookingId) {
+            fetch('http://localhost:8080/rest_service/api/bookingRequests/reject/' + bookingId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('HTTP error! status: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                showRequestMessage('Booking #' + bookingId + ' rejected successfully!', 'success');
+                loadBookingRequestData();
+            })
+            .catch(function(error) {
+                console.error('Error rejecting booking:', error);
+                showRequestMessage('Error rejecting booking: ' + error.message, 'error');
+            });
+        } 
+        
+        // Function to show confirms message
+        function showConfirmsMessage(message, type) {
+            const container = document.getElementById('confirms-message-container');
+            container.innerHTML = '<div class="' + type + '-message">' + message + '</div>';
+
+            // Auto-hide after 5 seconds
+            setTimeout(function() {
+                container.innerHTML = '';
+            }, 5000);
+        }
+
+        // Function to load confirmed booking data
+        function loadConfirmedBookingData() {
+            const tableBody = document.getElementById('confirmsTableBody');
+            tableBody.innerHTML = '<tr><td colspan="8" class="loading">Loading confirmed bookings...</td></tr>';
+
+            fetch('http://localhost:8080/rest_service/api/bookingRequests')
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('HTTP error! status: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(function(bookings) {
+                    // Filter only approved bookings
+                    const confirmedBookings = Array.isArray(bookings) 
+                        ? bookings.filter(booking => booking.status === "approved")
+                        : [bookings].filter(booking => booking.status === "approved");
+
+                    if (!confirmedBookings || confirmedBookings.length === 0) {
+                        tableBody.innerHTML = '<tr><td colspan="8" class="loading">No confirmed bookings found</td></tr>';
+                        return;
+                    }
+
+                    let tableContent = '';
+                    for (let i = 0; i < confirmedBookings.length; i++) {
+                        const booking = confirmedBookings[i];
+                        tableContent += '<tr>' +
+                            '<td>' + booking.id + '</td>' +
+                            '<td>' + booking.email + '</td>' +
+                            '<td>' + getPackageType(booking.packageType) + '</td>' +
+                            '<td>' + booking.date + '</td>' +
+                            '<td>' + booking.location + '</td>' +
+                            '<td>' + getCarType(booking.carType) + '</td>' +
+                            '<td>' + booking.payment.toFixed(2) + '</td>' +
+                            '<td>' +
+                                '<button class="action-btn delete-btn" onclick="cancelBooking(' + booking.id + ')">Cancel</button>' +
+                            '</td>' +
+                        '</tr>';
+                    }
+
+                    tableBody.innerHTML = tableContent;
+                })
+                .catch(function(error) {
+                    console.error('Error loading confirmed bookings:', error);
+                    tableBody.innerHTML = '<tr>' +
+                        '<td colspan="8" class="error-message">' +
+                            'Error loading confirmed bookings: ' + error.message +
+                        '</td>' +
+                    '</tr>';
+                });
+        }
+
+        // Function to cancel a confirmed booking
+        function cancelBooking(bookingId) {
+            fetch('http://localhost:8080/rest_service/api/bookingRequests/cancel/' + bookingId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('HTTP error! status: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                showConfirmsMessage('Booking #' + bookingId + ' cancelled successfully!', 'success');
+                loadConfirmedBookingData();
+            })
+            .catch(function(error) {
+                console.error('Error cancelling booking:', error);
+                showConfirmsMessage('Error cancelling booking: ' + error.message, 'error');
+            });
+        }
+
 
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM Content Loaded'); 
@@ -514,22 +786,24 @@
 
             sidebarLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
-                    // Only prevent default for links without real destinations
+
                     if (this.getAttribute('href') === '#') {
                         e.preventDefault();
                     }
 
-                    // Update active class
+
                     sidebarLinks.forEach(l => l.classList.remove('active'));
                     this.classList.add('active');
 
-                    // The href links will work naturally for actual pages
+
                 });
             });
 
             loadAdminData();
             loadUserData();
             loadVehicleData();
+            loadBookingRequestData();
+            loadConfirmedBookingData();
         });
     </script>
 </body>

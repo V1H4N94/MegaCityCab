@@ -842,54 +842,97 @@
     </div>
 
     <script>
-        // Check if user is logged in when page loads
-        window.onload = function() {
-            // Check if user is logged in
-            const userData = sessionStorage.getItem('loggedInUser');
-            
-            if (!userData) {
-                // Redirect to login if not logged in
+        function checkLogin() {
+            // Get the cookie values
+            const cookies = document.cookie.split(';');
+            const userCookie = cookies.find(cookie => cookie.trim().startsWith('loggedInUser='));
+
+            if (!userCookie) {
+                // No cookie found, redirect to login
                 window.location.href = 'login.jsp';
-                return;
+                return false;
+            }
+
+            // Extract user data from cookies
+            const userEmail = decodeURIComponent(userCookie.split('=')[1].trim());
+
+            // Get user ID
+            const idCookie = cookies.find(cookie => cookie.trim().startsWith('userId='));
+            const userId = idCookie ? idCookie.split('=')[1].trim() : '';
+
+            // Get full name
+            const nameCookie = cookies.find(cookie => cookie.trim().startsWith('fullName='));
+            const fullName = nameCookie ? decodeURIComponent(nameCookie.split('=')[1].trim()) : '';
+
+            // Get telephone
+            const telCookie = cookies.find(cookie => cookie.trim().startsWith('telephone='));
+            const telephone = telCookie ? decodeURIComponent(telCookie.split('=')[1].trim()) : '';
+
+            // Get identity
+            const identityCookie = cookies.find(cookie => cookie.trim().startsWith('identity='));
+            const identity = identityCookie ? decodeURIComponent(identityCookie.split('=')[1].trim()) : '';
+
+            // Get user type
+            const typeCookie = cookies.find(cookie => cookie.trim().startsWith('userType='));
+            const userType = typeCookie ? typeCookie.split('=')[1].trim() : 'customer';
+
+            // User is logged in, you can use all the variables
+            console.log(`Logged in as: ${userEmail} (${userType})`);
+            console.log(`User ID: ${userId}, Name: ${fullName}, Tel: ${telephone}, Identity: ${identity}`);
+
+            // You can display welcome message if needed
+            if (document.getElementById('userWelcome')) {
+                document.getElementById('userWelcome').textContent = `Welcome, ${fullName}!`;
             }
             
-            // Parse the user data
-            const user = JSON.parse(userData);
-            
-            // Update welcome message or any user-specific elements
-            document.getElementById('userWelcome').textContent = `Welcome, ${user.username}!`;
-            
-            // You can use the user data elsewhere in your page
-            console.log("Logged in user:", user);
-            
-            // Optional: load user-specific data for this page
-            loadUserData(user.userId);
-        };
-        
-        // Function to load user-specific data
-        function loadUserData(userId) {
-            // You can make AJAX calls to get user-specific data
-            // For example, loading previous bookings, etc.
-            console.log("Loading data for user ID:", userId);
+            // Also store user data in sessionStorage for profile page
+            if (userEmail && userId) {
+                const userData = {
+                    userId: userId,
+                    username: fullName || userEmail.split('@')[0],
+                    email: userEmail,
+                    tel: telephone,
+                    phone: telephone,
+                    identity: identity,
+                    userType: userType || 'customer'
+                };
+                sessionStorage.setItem('loggedInUser', JSON.stringify(userData));
+            }
+
+            return true;
         }
-        
+
+        // Call this function when the page loads
+        window.onload = function() {
+            checkLogin();
+
+            // Rest of your page initialization code
+        };
+
         // Function to handle logout
         function logout() {
-            // Clear the session storage
-            sessionStorage.removeItem('loggedInUser');
-            
-            // Clear the cookie
-            document.cookie = "loggedIn=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            
+            // Clear all cookies
+            document.cookie = "loggedInUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            document.cookie = "userType=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            document.cookie = "userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            document.cookie = "fullName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            document.cookie = "telephone=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            document.cookie = "identity=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
             // Redirect to login page
             window.location.href = 'login.jsp';
         }
-        
-        const menuBtn = document.querySelector('.menu-btn');
-        const navLinks = document.querySelector('.nav-links');
 
-        menuBtn.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
+        // Event listener for menu button (if it exists)
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuBtn = document.querySelector('.menu-btn');
+            const navLinks = document.querySelector('.nav-links');
+
+            if (menuBtn) {
+                menuBtn.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                });
+            }
         });
     </script>
 </body>

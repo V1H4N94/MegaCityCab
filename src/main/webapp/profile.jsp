@@ -557,6 +557,87 @@
                 grid-template-columns: 1fr;
             }
         }
+        
+        /* Booking History Table Styles */
+            .booking-history {
+                background: #f9f9f9;
+                border-radius: 5px;
+                padding: 1.5rem;
+                margin-top: 2rem;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                width: 100%;
+            }
+
+            .booking-history h3 {
+                color: #2c2c2c;
+                margin-bottom: 1rem;
+                border-bottom: 2px solid #FFD700;
+                padding-bottom: 0.5rem;
+            }
+
+            .booking-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 1rem;
+            }
+
+            .booking-table th {
+                background-color: #2c2c2c;
+                color: #FFD700;
+                text-align: left;
+                padding: 1rem;
+                font-weight: bold;
+            }
+
+            .booking-table td {
+                padding: 1rem;
+                border-bottom: 1px solid #e1e1e1;
+            }
+
+            .booking-table tr:nth-child(even) {
+                background-color: #f3f3f3;
+            }
+
+            .booking-table tr:hover {
+                background-color: #efefef;
+            }
+
+            .status-badge {
+                display: inline-block;
+                padding: 0.25rem 0.5rem;
+                border-radius: 20px;
+                font-size: 0.85rem;
+                font-weight: bold;
+                text-transform: capitalize;
+            }
+
+            .status-pending {
+                background-color: #ffd700;
+                color: #2c2c2c;
+            }
+
+            .status-approved {
+                background-color: #4caf50;
+                color: white;
+            }
+
+            .status-completed {
+                background-color: #2196f3;
+                color: white;
+            }
+
+            .status-cancelled {
+                background-color: #f44336;
+                color: white;
+            }
+
+            .no-bookings {
+                text-align: center;
+                padding: 2rem;
+                background-color: #f9f9f9;
+                border-radius: 5px;
+                color: #666;
+            }
     </style>
 </head>
 <body>
@@ -613,6 +694,14 @@
                 </div>
             </div>
         </main>
+        
+        <!-- Booking History Section - Add this after the profile-sections div -->
+        <div class="booking-history">
+            <h3>Your Recent Bookings</h3>
+            <div id="bookingHistoryContent">
+                <div class="loading">Loading your bookings...</div>
+            </div>
+        </div>
 
         <!-- Footer -->
         <div class="lenear-pattern"></div>
@@ -677,9 +766,20 @@
                 const loggedInUserJSON = sessionStorage.getItem('loggedInUser');
 
                 if (!loggedInUserJSON) {
-                    console.error("User is not logged in. Redirecting to login page.");
-                    window.location.href = 'login.jsp';
-                    return;
+                    // Check if cookie exists but session is missing
+                    const cookies = document.cookie.split(';');
+                    const loggedInCookie = cookies.find(cookie => cookie.trim().startsWith('loggedIn='));
+
+                    if (loggedInCookie) {
+                        // Found a cookie but no session - redirect to index for session restoration
+                        console.log("Login cookie found but session data missing. Redirecting to index...");
+                        window.location.href = 'index.jsp?redirect=profile';
+                        return;
+                    } else {
+                        console.error("User is not logged in. Redirecting to login page.");
+                        window.location.href = 'login.jsp';
+                        return;
+                    }
                 }
 
                 const loggedInUser = JSON.parse(loggedInUserJSON);
@@ -727,59 +827,58 @@
                 displayCustomerProfile(userDetails);
             }
 
-            function displayCustomerProfile(userDetails) {
-                document.getElementById('profileContent').innerHTML = `
-                    <div class="profile-header">
-                        <div class="profile-avatar">${userDetails.username.charAt(0).toUpperCase()}</div>
-                        <div class="profile-info">
-                            <h2>${userDetails.username}</h2>
-                            <p>${userDetails.email}</p>
-                            <p>Customer</p>
-                        </div>
-                    </div>
+           function displayCustomerProfile(userDetails) {
+                document.getElementById('profileContent').innerHTML = 
+                    '<div class="profile-header">' +
+                        '<div class="profile-avatar">' + userDetails.username.charAt(0).toUpperCase() + '</div>' +
+                        '<div class="profile-info">' +
+                            '<h2>' + userDetails.username + '</h2>' +
+                            '<p>' + userDetails.email + '</p>' +
+                            '<p>Customer</p>' +
+                        '</div>' +
+                    '</div>' +
 
-                    <div class="profile-sections">
-                        <div class="profile-section">
-                            <h3>Personal Information</h3>
-                            <form id="profileForm">
-                                <div class="profile-field">
-                                    <label for="fullName">Full Name</label>
-                                    <input type="text" id="fullName" value="${userDetails.username}">
-                                </div>
-                                <div class="profile-field">
-                                    <label for="email">Email</label>
-                                    <input type="email" id="email" value="${userDetails.email}" readonly>
-                                </div>
-                                <div class="profile-field">
-                                    <label for="phone">Phone Number</label>
-                                    <input type="tel" id="phone" value="${userDetails.tel || userDetails.phone || ''}">
-                                </div>
-                                <div class="profile-field">
-                                    <label for="identity">Identity/NIC</label>
-                                    <input type="text" id="identity" value="${userDetails.identity || ''}">
-                                </div>
-                                <div class="action-buttons">
-                                    <button type="button" class="action-button secondary-button" id="changePasswordBtn">Change Password</button>
-                                    <button type="button" class="action-button primary-button" id="saveProfileBtn">Save Changes</button>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="profile-section">
-                            <h3>Account Settings</h3>
-                            <div class="profile-field">
-                                <label>User ID</label>
-                                <input type="text" value="${userDetails.userId}" readonly>
-                            </div>
-                            <div class="profile-field">
-                                <label>Account Status</label>
-                                <input type="text" value="Active" readonly>
-                            </div>
-                            <div class="action-buttons">
-                                <button type="button" class="action-button logout-button" id="logoutBtn">Logout</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                    '<div class="profile-sections">' +
+                        '<div class="profile-section">' +
+                            '<h3>Personal Information</h3>' +
+                            '<form id="profileForm">' +
+                                '<div class="profile-field">' +
+                                    '<label for="fullName">Full Name</label>' +
+                                    '<input type="text" id="fullName" value="' + userDetails.username + '">' +
+                                '</div>' +
+                                '<div class="profile-field">' +
+                                    '<label for="email">Email</label>' +
+                                    '<input type="email" id="email" value="' + userDetails.email + '" readonly>' +
+                                '</div>' +
+                                '<div class="profile-field">' +
+                                    '<label for="phone">Phone Number</label>' +
+                                    '<input type="tel" id="phone" value="' + (userDetails.tel || userDetails.phone || '') + '">' +
+                                '</div>' +
+                                '<div class="profile-field">' +
+                                    '<label for="identity">Identity/NIC</label>' +
+                                    '<input type="text" id="identity" value="' + (userDetails.identity || '') + '">' +
+                                '</div>' +
+                                '<div class="action-buttons">' +
+                                    '<button type="button" class="action-button secondary-button" id="changePasswordBtn">Change Password</button>' +
+                                    '<button type="button" class="action-button primary-button" id="saveProfileBtn">Save Changes</button>' +
+                                '</div>' +
+                            '</form>' +
+                        '</div>' +
+                        '<div class="profile-section">' +
+                            '<h3>Account Settings</h3>' +
+                            '<div class="profile-field">' +
+                                '<label>User ID</label>' +
+                                '<input type="text" value="' + userDetails.userId + '" readonly>' +
+                            '</div>' +
+                            '<div class="profile-field">' +
+                                '<label>Account Status</label>' +
+                                '<input type="text" value="Active" readonly>' +
+                            '</div>' +
+                            '<div class="action-buttons">' +
+                                '<button type="button" class="action-button logout-button" id="logoutBtn">Logout</button>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
 
                 document.getElementById('logoutBtn').addEventListener('click', logout);
                 document.getElementById('saveProfileBtn').addEventListener('click', saveProfile);
@@ -787,36 +886,36 @@
             }
 
             // Function for Admin Profile (No API Fetch)
-            function displayAdminProfile(adminData) {
-                document.getElementById('profileContent').innerHTML = `
-                    <div class="profile-header">
-                        <div class="profile-avatar">${adminData.username.charAt(0).toUpperCase()}</div>
-                        <div class="profile-info">
-                            <h2>${adminData.username}</h2>
-                            <p>${adminData.email}</p>
-                            <p>Administrator</p>
-                        </div>
-                    </div>
-                    <div class="profile-sections">
-                        <div class="profile-section">
-                            <h3>Admin Details</h3>
-                            <div class="profile-field">
-                                <label>Admin Name</label>
-                                <input type="text" value="${adminData.username}" readonly>
-                            </div>
-                            <div class="profile-field">
-                                <label>Email</label>
-                                <input type="text" value="${adminData.email}" readonly>
-                            </div>
-                            <div class="action-buttons">
-                                <button type="button" class="action-button logout-button" id="logoutBtn">Logout</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                document.getElementById('logoutBtn').addEventListener('click', logout);
-            }
+//            function displayAdminProfile(adminData) {
+//                document.getElementById('profileContent').innerHTML = `
+//                    <div class="profile-header">
+//                        <div class="profile-avatar">${adminData.username.charAt(0).toUpperCase()}</div>
+//                        <div class="profile-info">
+//                            <h2>${adminData.username}</h2>
+//                            <p>${adminData.email}</p>
+//                            <p>Administrator</p>
+//                        </div>
+//                    </div>
+//                    <div class="profile-sections">
+//                        <div class="profile-section">
+//                            <h3>Admin Details</h3>
+//                            <div class="profile-field">
+//                                <label>Admin Name</label>
+//                                <input type="text" value="${adminData.username}" readonly>
+//                            </div>
+//                            <div class="profile-field">
+//                                <label>Email</label>
+//                                <input type="text" value="${adminData.email}" readonly>
+//                            </div>
+//                            <div class="action-buttons">
+//                                <button type="button" class="action-button logout-button" id="logoutBtn">Logout</button>
+//                            </div>
+//                        </div>
+//                    </div>
+//                `;
+//
+//                document.getElementById('logoutBtn').addEventListener('click', logout);
+//            }
 
             // Save profile changes (Only for Customers)
             async function saveProfile() {
@@ -874,6 +973,148 @@
             function showChangePasswordDialog() {
                 alert('Change password functionality would be implemented here');
             }
+            
+            // Add this to your document.addEventListener('DOMContentLoaded') function, after loading the user profile
+            document.addEventListener('DOMContentLoaded', async function () {
+                const loggedInUserJSON = sessionStorage.getItem('loggedInUser');
+
+                if (!loggedInUserJSON) {
+                    // Your existing session check code...
+                    return;
+                }
+
+                const loggedInUser = JSON.parse(loggedInUserJSON);
+
+                // Load the user profile as you already do
+
+                // Add this - Load the booking history
+                try {
+                    await loadBookingHistory(loggedInUser);
+                } catch (error) {
+                    console.error("Error loading booking history:", error);
+                    document.getElementById('bookingHistoryContent').innerHTML = `
+                        <div class="error">
+                            <h3>Error Loading Bookings</h3>
+                            <p>There was an error loading your booking history. Please try again later.</p>
+                        </div>
+                    `;
+                }
+            });
+
+            // Function to load booking history
+            async function loadBookingHistory(userData) {
+                console.log("Fetching booking history...");
+
+                try {
+                    const response = await fetch('http://localhost:8080/rest_service/api/bookingRequests');
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+
+                    let bookings = await response.json();
+
+                    // Convert to array if it's not already
+                    if (!Array.isArray(bookings)) {
+                        bookings = [bookings];
+                    }
+
+                    // Filter bookings by user email
+                    const userBookings = bookings.filter(booking => booking.email === userData.email);
+
+                    displayBookingHistory(userBookings);
+                } catch (error) {
+                    console.error("Failed to fetch booking history:", error);
+                    throw error;
+                }
+            }
+
+            // Function to display booking history
+            function displayBookingHistory(bookings) {
+                const container = document.getElementById('bookingHistoryContent');
+
+                if (!bookings || bookings.length === 0) {
+                    container.innerHTML = `
+                        <div class="no-bookings">
+                            <p>You don't have any bookings yet.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Sort bookings by date (newest first)
+                bookings.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                let tableHTML = `
+                    <table class="booking-table">
+                        <thead>
+                            <tr>
+                                <th>Booking ID</th>
+                                <th>Date</th>
+                                <th>Location</th>
+                                <th>Package</th>
+                                <th>Vehicle</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                bookings.forEach(booking => {
+                    tableHTML += `
+                        <tr>
+                            <td>` + booking.id + `</td>
+                            <td>` + formatDate(booking.date) + `</td>
+                            <td>` + booking.location + `</td>
+                            <td>` + getPackageType(booking.packageType) + `</td>
+                            <td>` + getCarType(booking.carType) + `</td>
+                            <td>Rs.` + booking.payment.toLocaleString() + `</td>
+                            <td><span class="status-badge status-` + booking.status.toLowerCase()+ `">` + booking.status + `</span></td>
+                        </tr>
+                    `;
+                });
+
+                tableHTML += `
+                        </tbody>
+                    </table>
+                `;
+
+                container.innerHTML = tableHTML;
+            }
+
+            // Helper function to format dates
+            function formatDate(dateString) {
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                return new Date(dateString).toLocaleDateString(undefined, options);
+            }
+            
+            // Helper function to get package type name
+            function getPackageType(packageTypeId) {
+                const packageTypes = {
+                    1: "Basic",
+                    2: "Economy",
+                    3: "Premium",
+                    4: "Premium Pro",
+                };
+                return packageTypes[packageTypeId] || "Unknown";
+            }
+
+            // Helper function to get car type name
+            function getCarType(carTypeId) {
+                const carTypes = {
+                    1: "Sedan",
+                    2: "Compact",
+                    3: "Minibus",
+                    4: "SubCompact",
+                    5: "Luxury Sedan",
+                    6: "Rugged SUV",
+                    7: "Pickup",
+                    8: "Sport",
+
+                };
+                return carTypes[carTypeId] || "Unknown";
+}
     </script>    
 </body>
 </html>

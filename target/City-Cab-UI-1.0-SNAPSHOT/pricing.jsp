@@ -607,10 +607,10 @@
                             <div class="plan-details">
                                 <p class="plan-description">Affordable rides for daily commutes</p>
                                 <div class="plan-price">
-                                    <span class="price">Rs. 5000</span>
-                                    <span class="price-detail">Base fare (20km)</span>
+                                    <span class="price">Rs. 15,000</span>
+                                    <span class="price-detail">Available for 24 hrs</span>
                                 </div>
-                                <p class="additional-rate">Rs. 100 per additional km</p>
+                                <p class="additional-rate">Day can be extended</p>
                                 <ul class="plan-features">
                                     <li>Limited vehicle types</li>
                                     <li>Basic amenities</li>
@@ -629,10 +629,10 @@
                             <div class="plan-details">
                                 <p class="plan-description">Comfortable rides at reasonable prices</p>
                                 <div class="plan-price">
-                                    <span class="price">Rs. 7500</span>
-                                    <span class="price-detail">Base fare (20km)</span>
+                                    <span class="price">Rs. 25,000</span>
+                                    <span class="price-detail">Available for 24 hrs</span>
                                 </div>
-                                <p class="additional-rate">Rs. 250 per additional km</p>
+                                <p class="additional-rate">Extend for additional day</p>
                                 <ul class="plan-features">
                                     <li>Wide range of vehicles</li>
                                     <li>Full-day reserve</li>
@@ -650,10 +650,10 @@
                             <div class="plan-details">
                                 <p class="plan-description">Luxurious rides for special occasions</p>
                                 <div class="plan-price">
-                                    <span class="price">Rs. 12000</span>
-                                    <span class="price-detail">Base fare (20km)</span>
+                                    <span class="price">Rs. 40,000</span>
+                                    <span class="price-detail">Available for 24 hrs</span>
                                 </div>
-                                <p class="additional-rate">Rs. 500 per additional km</p>
+                                <p class="additional-rate">Extend for additional day</p>
                                 <ul class="plan-features">
                                     <li>Luxury sedans</li>
                                     <li>Reserve up to two day</li>
@@ -671,10 +671,10 @@
                             <div class="plan-details">
                                 <p class="plan-description">Ultimate luxury experience for VIPs</p>
                                 <div class="plan-price">
-                                    <span class="price">Rs. 20000</span>
-                                    <span class="price-detail">Base fare (20km)</span>
+                                    <span class="price">Rs. 50,000</span>
+                                    <span class="price-detail">Available for 24 hrs</span>
                                 </div>
-                                <p class="additional-rate">Rs. 750 per additional km</p>
+                                <p class="additional-rate">Extend for additional day</p>
                                 <ul class="plan-features">
                                     <li>All vehicles available</li>
                                     <li>Up to three day</li>
